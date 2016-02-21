@@ -13,7 +13,7 @@
 #define GET_Cb_FROME_RGB (-37.797 * R - 74.203 * G + 112 * B + 128)
 #define GET_Cr_FROME_RGB (112 * R - 93.786 * G - 18.214 * B + 128)
 
-@interface ChangeColorViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource>
+@interface ChangeColorViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource, UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) UIImage *originalImage;
 

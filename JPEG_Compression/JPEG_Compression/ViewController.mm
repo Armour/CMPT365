@@ -18,9 +18,13 @@
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *takePhotoButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *beginCompressionButton;
 @property (strong, nonatomic) IBOutlet UIToolbar *toolBar;
+@property (strong, nonatomic) IBOutlet UILabel *originalImageLabel;
+@property (strong, nonatomic) IBOutlet UILabel *imageSizeLabel;
 
 @property (strong, nonatomic) UIImagePickerController *imagePickerController;
 @property (strong, nonatomic) UIImage *capturedImage;
+
+- (void)popAlertWithTitle:(NSString *)title message:(NSString *)message;
 
 @end
 
@@ -39,9 +43,14 @@
         [self.toolBar setItems:toolbarItems animated:NO];
     }
 
-    [self.mainPageImageView setImage:NULL];
+    [self.mainPageImageView setBackgroundColor:[UIColor blackColor]];
+    [self.mainPageImageView setContentMode:UIViewContentModeScaleAspectFit];
+
     self.imagePickerController = [[UIImagePickerController alloc] init];
     self.imagePickerController.delegate = self;
+
+    [self.originalImageLabel setTextColor:[UIColor blackColor]];
+    [self.imageSizeLabel setTextColor:[UIColor blackColor]];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -76,6 +85,8 @@
 - (IBAction)beginCompression:(UIBarButtonItem *)sender {
     if ([self.mainPageImageView image] != NULL) {
         [self performSegueWithIdentifier:@"segueToChangeColor" sender:self];
+    } else {
+        [self popAlertWithTitle:@"Emmm..." message:@"You haven't select an image :("];
     }
 }
 
@@ -83,10 +94,13 @@
 
 // This method is called when an image has been chosen from the library or taken from the camera.
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    UIImage *image = [info valueForKey:UIImagePickerControllerOriginalImage];
-    [self.mainPageImageView setBackgroundColor:[UIColor blackColor]];
-    [self.mainPageImageView setContentMode:UIViewContentModeScaleAspectFit];
+    UIImage *image = [info valueForKey:UIImagePickerControllerEditedImage];
+    int imageWidth = [image size].width;
+    int imageHeight = [image size].height;
     [self.mainPageImageView setImage:image];
+    [self.originalImageLabel setTextColor:[UIColor whiteColor]];
+    [self.imageSizeLabel setTextColor:[UIColor whiteColor]];
+    [self.imageSizeLabel setText:[NSString stringWithFormat:@"  W:%d  H:%d", imageWidth, imageHeight]];
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
@@ -101,6 +115,20 @@
         ChangeColorViewController *destViewController = [segue destinationViewController];
         [destViewController setOriginalImage:[self.mainPageImageView image]];
     }
+}
+
+#pragma mark - Alert Controller
+
+- (void)popAlertWithTitle:(NSString *)title message:(NSString *)message {
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * action) {}];
+    
+    [alert addAction:defaultAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 @end
