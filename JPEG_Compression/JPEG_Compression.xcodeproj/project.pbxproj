@@ -26,6 +26,7 @@
 		76D953E61C7911DC00A787F7 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76D953E51C7911DC00A787F7 /* CoreMedia.framework */; };
 		76D953E81C7911F500A787F7 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76D953E71C7911F500A787F7 /* QuartzCore.framework */; };
 		76D953ED1C7912E900A787F7 /* ChangeColorViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 76D953EC1C7912E900A787F7 /* ChangeColorViewController.mm */; };
+		76E0EB331C7BA00F003663DF /* DisplayViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 76E0EB321C7BA00F003663DF /* DisplayViewController.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,8 @@
 		76D953E71C7911F500A787F7 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		76D953EC1C7912E900A787F7 /* ChangeColorViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ChangeColorViewController.mm; sourceTree = "<group>"; };
 		76D953EE1C79131200A787F7 /* ChangeColorViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChangeColorViewController.h; sourceTree = "<group>"; };
+		76E0EB321C7BA00F003663DF /* DisplayViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DisplayViewController.mm; sourceTree = "<group>"; };
+		76E0EB341C7BA020003663DF /* DisplayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DisplayViewController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +144,8 @@
 				76D953EC1C7912E900A787F7 /* ChangeColorViewController.mm */,
 				762523FC1C7A46BA00E143FE /* DCTViewController.h */,
 				762523FA1C7A469D00E143FE /* DCTViewController.mm */,
+				76E0EB341C7BA020003663DF /* DisplayViewController.h */,
+				76E0EB321C7BA00F003663DF /* DisplayViewController.mm */,
 				76D953AB1C77D00C00A787F7 /* Main.storyboard */,
 				76D953B11C77D00C00A787F7 /* Assets.xcassets */,
 				76D953A21C77D00C00A787F7 /* Supporting Files */,
@@ -323,6 +328,7 @@
 				76D953E31C790B4A00A787F7 /* MatConvert.mm in Sources */,
 				76D953A71C77D00C00A787F7 /* AppDelegate.m in Sources */,
 				76D953A41C77D00C00A787F7 /* main.m in Sources */,
+				76E0EB331C7BA00F003663DF /* DisplayViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
