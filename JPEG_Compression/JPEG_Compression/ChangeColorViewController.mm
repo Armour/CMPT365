@@ -7,7 +7,12 @@
 //
 
 #import "ChangeColorViewController.h"
+#import "DCTViewController.h"
+#import "MatConvert.h"
+
 #include <vector>
+
+#define DEFAULT_PICKERVIEW_OPTION "Choose subsampling method"
 
 @interface ChangeColorViewController ()
 
@@ -42,29 +47,16 @@
 - (void)subsampling411;
 - (void)subsampling420;
 - (void)updateImageSizeLabel;
+- (void)initImageView;
+- (void)initPickerView;
 
 @end
 
 @implementation ChangeColorViewController
 
-#pragma mark - Life Cycle
+#pragma mark - Init & Update Functions
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    [self RGBtoYUV];
-
-    self.chromaSubsamplingPickerView.delegate = self;
-    self.chromaSubsamplingPickerView.dataSource = self;
-    self.chromaSubsamplingPickerView.backgroundColor = [UIColor whiteColor];
-
-    self.subsamplingPickerData = [[NSArray alloc] initWithObjects:@"Choose subsampling method", @"4:4:4", @"4:2:2", @"4:2:0", @"4:1:1", nil];
-
-    self.isChoosingSubsamplingMethod = false;
-
-    self.originalSubsamplingPickerViewCenterPoint = self.chromaSubsamplingPickerView.center;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
+- (void)initImageView {
     [self.channelYImageView setImage:[MatConvert UIImageFromCVMat:self.YImage]];
     [self.channelYImageView setBackgroundColor:[UIColor blackColor]];
     [self.channelYImageView setContentMode:UIViewContentModeScaleAspectFit];
@@ -76,7 +68,36 @@
     [self.channelCrImageView setImage:[MatConvert UIImageFromCVMat:self.CrImage444]];
     [self.channelCrImageView setBackgroundColor:[UIColor blackColor]];
     [self.channelCrImageView setContentMode:UIViewContentModeScaleAspectFit];
+}
 
+- (void)initPickerView {
+    self.chromaSubsamplingPickerView.delegate = self;
+    self.chromaSubsamplingPickerView.dataSource = self;
+    self.chromaSubsamplingPickerView.backgroundColor = [UIColor whiteColor];
+
+    self.subsamplingPickerData = [[NSArray alloc] initWithObjects:@DEFAULT_PICKERVIEW_OPTION, @"4:4:4", @"4:2:2", @"4:2:0", @"4:1:1", nil];
+
+    self.isChoosingSubsamplingMethod = false;
+
+    self.originalSubsamplingPickerViewCenterPoint = self.chromaSubsamplingPickerView.center;
+}
+
+- (void)updateImageSizeLabel {
+    [self.YImageSizeLabel setText:[NSString stringWithFormat:@"  W:%d  H:%d",
+                                   (int)[self.channelYImageView image].size.width, (int)[self.channelYImageView image].size.height]];
+    [self.CbImageSizeLabel setText:[NSString stringWithFormat:@"  W:%d  H:%d",
+                                    (int)[self.channelCbImageView image].size.width, (int)[self.channelCbImageView image].size.height]];
+    [self.CrImageSizeLabel setText:[NSString stringWithFormat:@"  W:%d  H:%d",
+                                    (int)[self.channelCrImageView image].size.width, (int)[self.channelCrImageView image].size.height]];
+}
+
+#pragma mark - Life Cycle
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self RGBtoYUV];
+    [self initImageView];
+    [self initPickerView];
     [self updateImageSizeLabel];
 }
 
@@ -118,7 +139,6 @@
 #pragma mark - Subsampling Implementation
 
 - (void)subsampling444 {
-    // Yeah I finish it! :)
     [self.channelCbImageView setImage:[MatConvert UIImageFromCVMat:self.CbImage444]];
     [self.channelCrImageView setImage:[MatConvert UIImageFromCVMat:self.CrImage444]];
 }
@@ -196,13 +216,16 @@
     }
 }
 
-- (void)updateImageSizeLabel {
-    [self.YImageSizeLabel setText:[NSString stringWithFormat:@"  W:%d  H:%d",
-                                   (int)[self.channelYImageView image].size.width, (int)[self.channelYImageView image].size.height]];
-    [self.CbImageSizeLabel setText:[NSString stringWithFormat:@"  W:%d  H:%d",
-                                   (int)[self.channelCbImageView image].size.width, (int)[self.channelCbImageView image].size.height]];
-    [self.CrImageSizeLabel setText:[NSString stringWithFormat:@"  W:%d  H:%d",
-                                   (int)[self.channelCrImageView image].size.width, (int)[self.channelCrImageView image].size.height]];
+- (IBAction)segueToDCT:(UIBarButtonItem *)sender {
+    if (self.isChoosingSubsamplingMethod) {
+        [self TapGestureEvent:nil];
+        return;
+    }
+    if ([[self.chooseSubsamplingButton title] isEqualToString:@DEFAULT_PICKERVIEW_OPTION]) {
+        [self popAlertWithTitle:@"Emmm..." message:@"You haven't select the subsampling algorithm :("];
+    } else {
+        [self performSegueWithIdentifier:@"segueToDCT" sender:self];
+    }
 }
 
 #pragma mark - Tap Gesture Event
@@ -218,6 +241,28 @@
                              [self.view layoutIfNeeded];
                          } completion:^(BOOL finished) {
                          }];
+    }
+}
+
+#pragma mark - Prepare Segue
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"segueToDCT"]) {
+        DCTViewController *destViewController = [segue destinationViewController];
+        [destViewController setYImage:self.YImage];
+        if ([[self.chooseSubsamplingButton title] isEqualToString:@"4:4:4"]) {
+            [destViewController setCbImage:self.CbImage444];
+            [destViewController setCrImage:self.CrImage444];
+        } else if ([[self.chooseSubsamplingButton title] isEqualToString:@"4:2:2"]) {
+            [destViewController setCbImage:self.CbImage422];
+            [destViewController setCrImage:self.CrImage422];
+        } else if ([[self.chooseSubsamplingButton title] isEqualToString:@"4:2:0"]) {
+            [destViewController setCbImage:self.CbImage420];
+            [destViewController setCrImage:self.CrImage420];
+        } else if ([[self.chooseSubsamplingButton title] isEqualToString:@"4:1:1"]) {
+            [destViewController setCbImage:self.CbImage411];
+            [destViewController setCrImage:self.CrImage411];
+        }
     }
 }
 
@@ -252,6 +297,20 @@
             break;
     }
     [self updateImageSizeLabel];
+}
+
+#pragma mark - Alert Controller
+
+- (void)popAlertWithTitle:(NSString *)title message:(NSString *)message {
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:title
+                                                                   message:message
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * action) {}];
+
+    [alert addAction:defaultAction];
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 @end

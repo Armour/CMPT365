@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <opencv2/opencv.hpp>
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @interface ViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 

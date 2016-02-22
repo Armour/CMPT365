@@ -9,9 +9,6 @@
 #import "ViewController.h"
 #import "ChangeColorViewController.h"
 
-#import <opencv2/opencv.hpp>
-#import <MobileCoreServices/MobileCoreServices.h>
-
 @interface ViewController ()
 
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *addImageButton;
@@ -24,6 +21,9 @@
 @property (strong, nonatomic) UIImagePickerController *imagePickerController;
 @property (strong, nonatomic) UIImage *capturedImage;
 
+- (void)initImageView;
+- (void)initPickerView;
+- (void)initCameraButton;
 - (void)popAlertWithTitle:(NSString *)title message:(NSString *)message;
 
 @end
@@ -31,26 +31,37 @@
 
 @implementation ViewController
 
-#pragma mark - Life Cycle
+#pragma mark - Init Functions
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+- (void)initImageView {
+    [self.mainPageImageView setBackgroundColor:[UIColor blackColor]];
+    [self.mainPageImageView setContentMode:UIViewContentModeScaleAspectFit];
 
+    [self.originalImageLabel setTextColor:[UIColor blackColor]];
+    [self.imageSizeLabel setTextColor:[UIColor blackColor]];
+}
+
+- (void)initPickerView {
+    self.imagePickerController = [[UIImagePickerController alloc] init];
+    self.imagePickerController.delegate = self;
+}
+
+- (void)initCameraButton {
     // If there is not a camera on this device, don't show the camera button.
     if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         NSMutableArray *toolbarItems = [[self.toolBar items] mutableCopy];
         [toolbarItems removeObjectAtIndex:4];
         [self.toolBar setItems:toolbarItems animated:NO];
     }
+}
 
-    [self.mainPageImageView setBackgroundColor:[UIColor blackColor]];
-    [self.mainPageImageView setContentMode:UIViewContentModeScaleAspectFit];
+#pragma mark - Life Cycle
 
-    self.imagePickerController = [[UIImagePickerController alloc] init];
-    self.imagePickerController.delegate = self;
-
-    [self.originalImageLabel setTextColor:[UIColor blackColor]];
-    [self.imageSizeLabel setTextColor:[UIColor blackColor]];
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self initImageView];
+    [self initPickerView];
+    [self initCameraButton];
 }
 
 - (void)didReceiveMemoryWarning {
