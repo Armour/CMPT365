@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <opencv2/opencv.hpp>
 
-@interface DisplayViewController : UIViewController
+@interface DisplayViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource>
 
 @property (nonatomic) cv::Mat YImage;
 @property (nonatomic) cv::Mat CbImage;

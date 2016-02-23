@@ -15,6 +15,7 @@
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *takePhotoButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *beginCompressionButton;
 @property (strong, nonatomic) IBOutlet UIToolbar *toolBar;
+
 @property (strong, nonatomic) IBOutlet UILabel *originalImageLabel;
 @property (strong, nonatomic) IBOutlet UILabel *imageSizeLabel;
 

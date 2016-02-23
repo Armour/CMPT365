@@ -19,9 +19,11 @@
 @property (strong, nonatomic) IBOutlet UIImageView *channelYImageView;
 @property (strong, nonatomic) IBOutlet UIImageView *channelCbImageView;
 @property (strong, nonatomic) IBOutlet UIImageView *channelCrImageView;
+
 @property (strong, nonatomic) IBOutlet UIPickerView *chromaSubsamplingPickerView;
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *chromaSubsamplingPickerViewTopConstraint;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *chooseSubsamplingButton;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *chromaSubsamplingPickerViewTopConstraint;
+
 @property (strong, nonatomic) IBOutlet UILabel *YImageSizeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *CbImageSizeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *CrImageSizeLabel;
@@ -29,16 +31,16 @@
 @property (nonatomic) cv::Mat RGBImage;
 @property (nonatomic) cv::Mat YImage;
 @property (nonatomic) cv::Mat CbImage444;
-@property (nonatomic) cv::Mat CrImage444;
 @property (nonatomic) cv::Mat CbImage422;
-@property (nonatomic) cv::Mat CrImage422;
-@property (nonatomic) cv::Mat CbImage411;
-@property (nonatomic) cv::Mat CrImage411;
 @property (nonatomic) cv::Mat CbImage420;
+@property (nonatomic) cv::Mat CbImage411;
+@property (nonatomic) cv::Mat CrImage444;
+@property (nonatomic) cv::Mat CrImage422;
 @property (nonatomic) cv::Mat CrImage420;
+@property (nonatomic) cv::Mat CrImage411;
 
-@property (strong, nonatomic) NSArray *subsamplingPickerData;
 @property (nonatomic) BOOL isChoosingSubsamplingMethod;
+@property (strong, nonatomic) NSArray *subsamplingPickerData;
 @property (nonatomic) CGPoint originalSubsamplingPickerViewCenterPoint;
 
 - (void)RGBtoYUV;
@@ -51,6 +53,7 @@
 - (void)initPickerView;
 
 @end
+
 
 @implementation ChangeColorViewController
 
@@ -208,7 +211,7 @@
         self.chromaSubsamplingPickerViewTopConstraint.constant -= [self.chromaSubsamplingPickerView frame].size.height;
         [UIView animateWithDuration:0.3f
                               delay:0.0f
-                            options:UIViewAnimationTransitionNone
+                            options:UIViewAnimationCurveEaseIn
                          animations:^{
                              [self.view layoutIfNeeded];
                          } completion:^(BOOL finished) {
@@ -236,7 +239,7 @@
         self.chromaSubsamplingPickerViewTopConstraint.constant += [self.chromaSubsamplingPickerView frame].size.height;
         [UIView animateWithDuration:0.3f
                               delay:0.0f
-                            options:UIViewAnimationTransitionNone
+                            options:UIViewAnimationCurveEaseOut
                          animations:^{
                              [self.view layoutIfNeeded];
                          } completion:^(BOOL finished) {
