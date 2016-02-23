@@ -69,12 +69,15 @@
 @property (nonatomic) CGPoint originalQuantizationMatrixPickerViewCenterPoint;
 @property (nonatomic) BOOL isTouchedImageView;
 
+@property (strong, nonatomic) UIImageView *zoomImageView;
+
 - (void)initImageView;
 - (void)initPickerView;
 - (void)initCollectionView;
 - (void)initSizeLabel;
 - (void)initDCTMatrix;
 - (void)initQuantizationMatrix;
+- (void)initZoomImageView;
 - (void)updateCollectionViewData;
 - (void)clipTo8nx8nMatrix;
 - (void)runDCT;
@@ -259,6 +262,15 @@
     quantizationMatrix.push_back(highConstantQuantizationMatrix.clone());
 }
 
+- (void)initZoomImageView {
+    self.zoomImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+    [self.zoomImageView setImage:[UIImage imageNamed:@"Zoom"]];
+    [self.zoomImageView setHidden:true];
+    [self.view addSubview:self.zoomImageView];
+    [self.view bringSubviewToFront:self.zoomImageView];
+    [self.view bringSubviewToFront:self.quantizationMatrixPickerView];
+}
+
 - (void)updateCollectionViewData {
     UICollectionView * DCTCollectionView = (UICollectionView *)[self.DCTUIView subviews][0];
     UICollectionView * quantizedCollectionView = (UICollectionView *)[self.quantizedUIView subviews][0];
@@ -279,6 +291,7 @@
     [self initSizeLabel];
     [self initDCTMatrix];
     [self initQuantizationMatrix];
+    [self initZoomImageView];
     [self runDCT];
     [self runQuantization];
     [self runInverseQuantization];
@@ -602,6 +615,7 @@
 
 - (void)YImageTapped:(UITapGestureRecognizer *)sender {
     [self TapGestureEvent:sender];
+    CGPoint screenPoint = [sender locationInView:self.view];
     CGPoint touchPoint = [sender locationInView:self.channelYImageView];
     CGRect rect = [self calculateTheRectOfImageInUIImageView:self.channelYImageView];
     if (touchPoint.x >= rect.origin.x && touchPoint.x <= rect.origin.x + rect.size.width &&
@@ -619,12 +633,15 @@
         }
         self.isTouchedImageView = true;
         [self updateCollectionViewData];
+        [self.zoomImageView setFrame:CGRectMake(screenPoint.x, screenPoint.y, 20, 20)];
+        [self.zoomImageView setHidden:false];
+        [self.view layoutIfNeeded];
     }
 }
 
 - (void)CbImageTapped:(UITapGestureRecognizer *)sender {
     [self TapGestureEvent:sender];
-    self.isTouchedImageView = true;
+    CGPoint screenPoint = [sender locationInView:self.view];
     CGPoint touchPoint = [sender locationInView:self.channelCbImageView];
     CGRect rect = [self calculateTheRectOfImageInUIImageView:self.channelCbImageView];
     if (touchPoint.x >= rect.origin.x && touchPoint.x <= rect.origin.x + rect.size.width &&
@@ -642,11 +659,15 @@
         }
         self.isTouchedImageView = true;
         [self updateCollectionViewData];
+        [self.zoomImageView setFrame:CGRectMake(screenPoint.x, screenPoint.y, 20, 20)];
+        [self.zoomImageView setHidden:false];
+        [self.view layoutIfNeeded];
     }
 }
 
 - (void)CrImageTapped:(UITapGestureRecognizer *)sender {
     [self TapGestureEvent:sender];
+    CGPoint screenPoint = [sender locationInView:self.view];
     CGPoint touchPoint = [sender locationInView:self.channelCrImageView];
     CGRect rect = [self calculateTheRectOfImageInUIImageView:self.channelCrImageView];
     if (touchPoint.x >= rect.origin.x && touchPoint.x <= rect.origin.x + rect.size.width &&
@@ -664,6 +685,9 @@
         }
         self.isTouchedImageView = true;
         [self updateCollectionViewData];
+        [self.zoomImageView setFrame:CGRectMake(screenPoint.x, screenPoint.y, 20, 20)];
+        [self.zoomImageView setHidden:false];
+        [self.view layoutIfNeeded];
     }
 }
 

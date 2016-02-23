@@ -20,7 +20,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Fyq-23-Zhu">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MainPage" translatesAutoresizingMaskIntoConstraints="NO" id="Fyq-23-Zhu">
                                 <rect key="frame" x="0.0" y="64" width="600" height="492"/>
                             </imageView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ntP-gd-yb3">
@@ -88,15 +88,28 @@
                                     </mask>
                                 </variation>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2ph-f6-k5W">
+                                <rect key="frame" x="230" y="88" width="141" height="58"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="2ph-f6-k5W" secondAttribute="height" multiplier="141:58" id="dVo-Mr-GJu"/>
+                                    <constraint firstAttribute="width" constant="141" id="fCt-5r-xtt"/>
+                                    <constraint firstAttribute="height" constant="58" id="i8i-Sp-fmy"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" red="0.9681087967174139" green="1" blue="0.98644703713958026" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Fyq-23-Zhu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="3ey-9C-3DQ"/>
+                            <constraint firstItem="2ph-f6-k5W" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="24" id="5xa-iR-HJf"/>
                             <constraint firstItem="ntP-gd-yb3" firstAttribute="top" secondItem="Fyq-23-Zhu" secondAttribute="bottom" id="6Zd-Cf-krh"/>
                             <constraint firstItem="v7x-0t-UgS" firstAttribute="trailing" secondItem="Fyq-23-Zhu" secondAttribute="trailing" id="BN5-pm-5ZM"/>
                             <constraint firstAttribute="trailing" secondItem="Fyq-23-Zhu" secondAttribute="trailing" id="DHR-X7-hMZ"/>
                             <constraint firstItem="v7x-0t-UgS" firstAttribute="top" secondItem="Fyq-23-Zhu" secondAttribute="bottom" constant="-49" id="GHl-Qm-fK4"/>
                             <constraint firstItem="Fyq-23-Zhu" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="64" id="ICh-6Q-yIn"/>
+                            <constraint firstItem="2ph-f6-k5W" firstAttribute="centerX" secondItem="Fyq-23-Zhu" secondAttribute="centerX" id="JDn-k0-p9M"/>
                             <constraint firstItem="ph6-ee-0my" firstAttribute="leading" secondItem="Fyq-23-Zhu" secondAttribute="leading" id="JdK-bG-9cc"/>
                             <constraint firstItem="ntP-gd-yb3" firstAttribute="trailing" secondItem="Fyq-23-Zhu" secondAttribute="trailing" id="Txl-OJ-Z5W"/>
                             <constraint firstItem="v7x-0t-UgS" firstAttribute="leading" secondItem="ph6-ee-0my" secondAttribute="trailing" constant="8" id="X6i-vO-fL2"/>
@@ -123,6 +136,7 @@
                         <outlet property="originalImageLabel" destination="v7x-0t-UgS" id="gJa-us-x1s"/>
                         <outlet property="takePhotoButton" destination="0W1-Mr-ahQ" id="Q0X-vY-b3c"/>
                         <outlet property="toolBar" destination="ntP-gd-yb3" id="dNC-BI-6Qb"/>
+                        <outlet property="welcomeLabel" destination="2ph-f6-k5W" id="TPo-dp-WqU"/>
                         <segue destination="duW-dB-KkN" kind="show" identifier="segueToChangeColor" id="FQk-Be-QeN"/>
                     </connections>
                 </viewController>
@@ -1557,4 +1571,7 @@
             <point key="canvasLocation" x="325" y="377"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="MainPage" width="256" height="256"/>
+    </resources>
 </document>

@@ -18,6 +18,7 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *originalImageLabel;
 @property (strong, nonatomic) IBOutlet UILabel *imageSizeLabel;
+@property (strong, nonatomic) IBOutlet UILabel *welcomeLabel;
 
 @property (strong, nonatomic) UIImagePickerController *imagePickerController;
 @property (strong, nonatomic) UIImage *capturedImage;
@@ -113,6 +114,7 @@
     [self.originalImageLabel setTextColor:[UIColor whiteColor]];
     [self.imageSizeLabel setTextColor:[UIColor whiteColor]];
     [self.imageSizeLabel setText:[NSString stringWithFormat:@"  W:%d  H:%d", imageWidth, imageHeight]];
+    [self.welcomeLabel setHidden:true];
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
