@@ -27,6 +27,7 @@
 		76D953E81C7911F500A787F7 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76D953E71C7911F500A787F7 /* QuartzCore.framework */; };
 		76D953ED1C7912E900A787F7 /* ChangeColorViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 76D953EC1C7912E900A787F7 /* ChangeColorViewController.mm */; };
 		76E0EB331C7BA00F003663DF /* DisplayViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 76E0EB321C7BA00F003663DF /* DisplayViewController.mm */; };
+		76E0EB361C7C47BC003663DF /* FinalResultViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 76E0EB351C7C47BC003663DF /* FinalResultViewController.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,8 @@
 		76D953EE1C79131200A787F7 /* ChangeColorViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChangeColorViewController.h; sourceTree = "<group>"; };
 		76E0EB321C7BA00F003663DF /* DisplayViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DisplayViewController.mm; sourceTree = "<group>"; };
 		76E0EB341C7BA020003663DF /* DisplayViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DisplayViewController.h; sourceTree = "<group>"; };
+		76E0EB351C7C47BC003663DF /* FinalResultViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FinalResultViewController.mm; sourceTree = "<group>"; };
+		76E0EB371C7C47D5003663DF /* FinalResultViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FinalResultViewController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +149,8 @@
 				762523FA1C7A469D00E143FE /* DCTViewController.mm */,
 				76E0EB341C7BA020003663DF /* DisplayViewController.h */,
 				76E0EB321C7BA00F003663DF /* DisplayViewController.mm */,
+				76E0EB371C7C47D5003663DF /* FinalResultViewController.h */,
+				76E0EB351C7C47BC003663DF /* FinalResultViewController.mm */,
 				76D953AB1C77D00C00A787F7 /* Main.storyboard */,
 				76D953B11C77D00C00A787F7 /* Assets.xcassets */,
 				76D953A21C77D00C00A787F7 /* Supporting Files */,
@@ -325,6 +330,7 @@
 				76D953ED1C7912E900A787F7 /* ChangeColorViewController.mm in Sources */,
 				76D953B01C77D00C00A787F7 /* JPEG_Compression.xcdatamodeld in Sources */,
 				76D953AA1C77D00C00A787F7 /* ViewController.mm in Sources */,
+				76E0EB361C7C47BC003663DF /* FinalResultViewController.mm in Sources */,
 				76D953E31C790B4A00A787F7 /* MatConvert.mm in Sources */,
 				76D953A71C77D00C00A787F7 /* AppDelegate.m in Sources */,
 				76D953A41C77D00C00A787F7 /* main.m in Sources */,

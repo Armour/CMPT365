@@ -24,7 +24,6 @@
 @property (strong, nonatomic) NSArray *quantizationMatrixPickerData;
 @property (nonatomic) BOOL isChoosingQuantizationMatrix;
 @property (nonatomic) CGPoint originalQuantizationMatrixPickerViewCenterPoint;
-@property (nonatomic) NSInteger quantizationMatrixNumber;
 
 - (void)initImageView;
 - (void)initPickerView;
@@ -39,15 +38,19 @@
 - (void)initImageView {
     [self.view layoutIfNeeded];
 
-    [self.YImageView setImage:[MatConvert UIImageFromCVMat:self.YImage]];
+    if (self.quantizationMatrixChoosedNumber < 0) {
+        self.quantizationMatrixChoosedNumber = 0;
+    }
+
+    [self.YImageView setImage:[MatConvert UIImageFromCVMat:YImage[self.quantizationMatrixChoosedNumber]]];
     [self.YImageView setBackgroundColor:[UIColor blackColor]];
     [self.YImageView setContentMode:UIViewContentModeScaleAspectFit];
 
-    [self.CbImageView setImage:[MatConvert UIImageFromCVMat:self.CbImage]];
+    [self.CbImageView setImage:[MatConvert UIImageFromCVMat:CbImage[self.quantizationMatrixChoosedNumber]]];
     [self.CbImageView setBackgroundColor:[UIColor blackColor]];
     [self.CbImageView setContentMode:UIViewContentModeScaleAspectFit];
 
-    [self.CrImageView setImage:[MatConvert UIImageFromCVMat:self.CrImage]];
+    [self.CrImageView setImage:[MatConvert UIImageFromCVMat:CrImage[self.quantizationMatrixChoosedNumber]]];
     [self.CrImageView setBackgroundColor:[UIColor blackColor]];
     [self.CrImageView setContentMode:UIViewContentModeScaleAspectFit];
 }
@@ -135,6 +138,10 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     [self.chooseQuantizationMatrixButton setTitle:[self.quantizationMatrixPickerData objectAtIndex:row]];
+    self.quantizationMatrixChoosedNumber = row;
+    [self.YImageView setImage:[MatConvert UIImageFromCVMat:YImage[self.quantizationMatrixChoosedNumber]]];
+    [self.CbImageView setImage:[MatConvert UIImageFromCVMat:CbImage[self.quantizationMatrixChoosedNumber]]];
+    [self.CrImageView setImage:[MatConvert UIImageFromCVMat:CrImage[self.quantizationMatrixChoosedNumber]]];
 }
 
 @end

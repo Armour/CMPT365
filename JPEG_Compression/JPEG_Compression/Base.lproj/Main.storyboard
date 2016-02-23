@@ -133,7 +133,7 @@
         <!--Final Result-->
         <scene sceneID="ged-po-x8N">
             <objects>
-                <viewController id="EzA-b6-ll0" sceneMemberID="viewController">
+                <viewController id="EzA-b6-ll0" customClass="FinalResultViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="JfT-je-AgQ"/>
                         <viewControllerLayoutGuide type="bottom" id="Zsn-WV-y7W"/>
@@ -143,37 +143,19 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="120-aK-t4V">
-                                <rect key="frame" x="0.0" y="64" width="600" height="246"/>
-                            </imageView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7yF-LW-x6H">
-                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="2fI-i0-4MY"/>
-                                </constraints>
-                                <items>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="nhV-rv-yZ6"/>
-                                    <barButtonItem id="lF5-QN-MGb">
-                                        <connections>
-                                            <action selector="chooseSubsampling:" destination="duW-dB-KkN" id="VjK-Gs-sMe"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="YxU-6Y-1Tu"/>
-                                </items>
-                            </toolbar>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aN0-4E-aGW">
-                                <rect key="frame" x="0.0" y="310" width="600" height="246"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="264"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="412-yG-kln">
-                                <rect key="frame" x="500" y="285" width="100" height="25"/>
+                                <rect key="frame" x="520" y="288" width="80" height="40"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="100" id="1Sk-kZ-obd"/>
+                                    <constraint firstAttribute="width" constant="80" id="1Sk-kZ-obd"/>
                                     <constraint firstAttribute="width" secondItem="412-yG-kln" secondAttribute="height" multiplier="1:1" id="9vc-ea-D0b"/>
                                 </constraints>
                                 <attributedString key="attributedText">
                                     <fragment content="Original">
                                         <attributes>
                                             <color key="NSColor" red="0.99458193370000003" green="1" blue="0.99603888979999999" alpha="1" colorSpace="calibratedRGB"/>
-                                            <font key="NSFont" size="11" name="HelveticaNeue-Bold"/>
+                                            <font key="NSFont" size="14" name="HelveticaNeue-Bold"/>
                                             <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="truncatingTail" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                         </attributes>
                                     </fragment>
@@ -185,29 +167,62 @@
                                     </mask>
                                 </variation>
                             </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aN0-4E-aGW">
+                                <rect key="frame" x="0.0" y="336" width="600" height="264"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Xsq-Nr-f3u">
+                                <rect key="frame" x="520" y="560" width="80" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="Gen-xW-EfD"/>
+                                    <constraint firstAttribute="width" secondItem="Xsq-Nr-f3u" secondAttribute="height" multiplier="1:1" id="tax-Xp-x76"/>
+                                </constraints>
+                                <attributedString key="attributedText">
+                                    <fragment content="Final">
+                                        <attributes>
+                                            <color key="NSColor" red="0.99458193370000003" green="1" blue="0.99603888979999999" alpha="1" colorSpace="calibratedRGB"/>
+                                            <font key="NSFont" size="14" name="HelveticaNeue-Bold"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="truncatingTail" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="tax-Xp-x76"/>
+                                    </mask>
+                                </variation>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="412-yG-kln" firstAttribute="trailing" secondItem="120-aK-t4V" secondAttribute="trailing" id="6cV-6y-EXU"/>
                             <constraint firstItem="412-yG-kln" firstAttribute="bottom" secondItem="120-aK-t4V" secondAttribute="bottom" id="9m4-yU-iGv"/>
+                            <constraint firstItem="Xsq-Nr-f3u" firstAttribute="width" secondItem="Xsq-Nr-f3u" secondAttribute="height" multiplier="2:1" id="Ce6-tQ-J4n"/>
                             <constraint firstItem="120-aK-t4V" firstAttribute="top" secondItem="JfT-je-AgQ" secondAttribute="bottom" id="Geh-I5-BZr"/>
-                            <constraint firstItem="7yF-LW-x6H" firstAttribute="trailing" secondItem="aN0-4E-aGW" secondAttribute="trailing" id="Gjz-X7-Ses"/>
-                            <constraint firstItem="aN0-4E-aGW" firstAttribute="leading" secondItem="7yF-LW-x6H" secondAttribute="leading" id="KU6-E6-bAk"/>
+                            <constraint firstItem="aN0-4E-aGW" firstAttribute="bottom" secondItem="Zsn-WV-y7W" secondAttribute="top" id="NdS-qE-KcN"/>
+                            <constraint firstItem="aN0-4E-aGW" firstAttribute="leading" secondItem="120-aK-t4V" secondAttribute="leading" id="PoI-gy-8xH"/>
+                            <constraint firstItem="Xsq-Nr-f3u" firstAttribute="trailing" secondItem="aN0-4E-aGW" secondAttribute="trailing" id="QMS-WS-bQn"/>
                             <constraint firstAttribute="trailing" secondItem="aN0-4E-aGW" secondAttribute="trailing" id="QTK-4a-fHR"/>
                             <constraint firstItem="aN0-4E-aGW" firstAttribute="leading" secondItem="Fcu-m6-uIo" secondAttribute="leading" id="TB1-9a-6YA"/>
-                            <constraint firstItem="aN0-4E-aGW" firstAttribute="top" secondItem="120-aK-t4V" secondAttribute="bottom" id="UTY-fP-lfD"/>
+                            <constraint firstItem="aN0-4E-aGW" firstAttribute="top" secondItem="120-aK-t4V" secondAttribute="bottom" constant="8" id="UTY-fP-lfD"/>
                             <constraint firstItem="120-aK-t4V" firstAttribute="height" secondItem="aN0-4E-aGW" secondAttribute="height" id="amY-mZ-MvE"/>
-                            <constraint firstItem="7yF-LW-x6H" firstAttribute="top" secondItem="aN0-4E-aGW" secondAttribute="bottom" id="c3A-9p-ds3"/>
-                            <constraint firstItem="7yF-LW-x6H" firstAttribute="bottom" secondItem="Zsn-WV-y7W" secondAttribute="top" id="l6g-gn-L5R"/>
-                            <constraint firstItem="120-aK-t4V" firstAttribute="trailing" secondItem="7yF-LW-x6H" secondAttribute="trailing" id="op8-0i-wBq"/>
-                            <constraint firstItem="412-yG-kln" firstAttribute="width" secondItem="412-yG-kln" secondAttribute="height" multiplier="4:1" id="uz6-eJ-Scp"/>
-                            <constraint firstItem="120-aK-t4V" firstAttribute="leading" secondItem="7yF-LW-x6H" secondAttribute="leading" id="yu0-Jh-DxJ"/>
+                            <constraint firstItem="Xsq-Nr-f3u" firstAttribute="bottom" secondItem="aN0-4E-aGW" secondAttribute="bottom" id="oAi-UN-MPR"/>
+                            <constraint firstItem="aN0-4E-aGW" firstAttribute="trailing" secondItem="412-yG-kln" secondAttribute="trailing" id="rTG-nl-UXw"/>
+                            <constraint firstItem="412-yG-kln" firstAttribute="width" secondItem="412-yG-kln" secondAttribute="height" multiplier="2:1" id="uz6-eJ-Scp"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Final Result" id="6t4-4D-vVN">
                         <barButtonItem key="backBarButtonItem" title=" Back" id="0VH-qV-1IB"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="lNs-Lf-Nbm"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="lNs-Lf-Nbm">
+                            <connections>
+                                <action selector="backToMainPage:" destination="EzA-b6-ll0" id="9Me-fs-SV6"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="finalImageView" destination="aN0-4E-aGW" id="MU4-n3-LTw"/>
+                        <outlet property="originalImageView" destination="120-aK-t4V" id="2Co-jv-rUt"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PYS-T1-cTg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -361,7 +376,7 @@
                                 </constraints>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="vX2-r1-KJC"/>
-                                    <barButtonItem id="nqx-9K-jjq">
+                                    <barButtonItem title="non-uniform quantization" id="nqx-9K-jjq">
                                         <connections>
                                             <action selector="chooseQuantizationMatrix:" destination="uBv-Nq-JB5" id="zvV-c1-nlq"/>
                                         </connections>
@@ -589,7 +604,7 @@
                                 </constraints>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="VGg-pV-iDQ"/>
-                                    <barButtonItem id="bUb-uN-enW">
+                                    <barButtonItem title="non-uniform quantization" id="bUb-uN-enW">
                                         <connections>
                                             <action selector="chooseQuantizationMatrix:" destination="x1O-8d-ktw" id="DQy-pf-2DW"/>
                                         </connections>
@@ -1266,8 +1281,6 @@
                         <outlet property="CbImageSizeLabel" destination="zEl-U7-rtu" id="LfG-gj-Knv"/>
                         <outlet property="CrImageSizeLabel" destination="Bai-qH-yts" id="Lmt-KT-DLo"/>
                         <outlet property="DCTUIView" destination="1sy-Nt-xBT" id="moB-ee-Uqe"/>
-                        <outlet property="QuantizationMatrixUIView" destination="upb-oH-B8a" id="eUH-hw-y94"/>
-                        <outlet property="QuantizedUIView" destination="QLG-SK-uDB" id="vYI-R3-z6U"/>
                         <outlet property="YImageSizeLabel" destination="HPb-IR-y34" id="bku-Hj-D3Q"/>
                         <outlet property="channelCbImageView" destination="16i-mJ-a19" id="0Kb-RR-BdQ"/>
                         <outlet property="channelCbUIView" destination="sZs-Dk-KdC" id="L05-ag-oba"/>
@@ -1278,6 +1291,8 @@
                         <outlet property="chooseQuantizationMatrixButton" destination="qzO-tE-Opp" id="EO0-g4-hTL"/>
                         <outlet property="quantizationMatrixPickerTopConstraint" destination="ZsV-Zb-O5Q" id="y5h-6o-kvW"/>
                         <outlet property="quantizationMatrixPickerView" destination="vpz-qx-7uY" id="ATm-pZ-Gi0"/>
+                        <outlet property="quantizationMatrixUIView" destination="upb-oH-B8a" id="4h8-9h-6es"/>
+                        <outlet property="quantizedUIView" destination="QLG-SK-uDB" id="eQw-j9-VoD"/>
                         <segue destination="EzA-b6-ll0" kind="show" identifier="segueToFinalResult" id="6fI-Bt-JnW"/>
                         <segue destination="x1O-8d-ktw" kind="show" identifier="segueToQuantizedResult" id="gOr-PU-O45"/>
                         <segue destination="Hwh-Jf-5li" kind="show" identifier="segueToIDCTResult" id="zex-2K-JsJ"/>
@@ -1440,7 +1455,7 @@
                                 </constraints>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="QvR-VN-Z2Y"/>
-                                    <barButtonItem id="DPA-dn-pLC">
+                                    <barButtonItem title="non-uniform quantization" id="DPA-dn-pLC">
                                         <connections>
                                             <action selector="chooseQuantizationMatrix:" destination="Hwh-Jf-5li" id="veH-XO-LfO"/>
                                         </connections>

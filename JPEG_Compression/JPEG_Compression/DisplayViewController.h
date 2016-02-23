@@ -9,10 +9,13 @@
 #import <UIKit/UIKit.h>
 #import <opencv2/opencv.hpp>
 
-@interface DisplayViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource>
+@interface DisplayViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource> {
+  @public
+    std::vector<cv::Mat> YImage;
+    std::vector<cv::Mat> CbImage;
+    std::vector<cv::Mat> CrImage;
+}
 
-@property (nonatomic) cv::Mat YImage;
-@property (nonatomic) cv::Mat CbImage;
-@property (nonatomic) cv::Mat CrImage;
+@property (nonatomic) NSInteger quantizationMatrixChoosedNumber;
 
 @end

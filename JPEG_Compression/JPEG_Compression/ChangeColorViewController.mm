@@ -125,12 +125,12 @@
 
     for (int i = 0; i < imageHeight; i++) {
         for (int j = 0; j < imageWidth; j++) {
-            float R = (float)RGBChannels[0].at<uchar>(i, j) / 255;
-            float G = (float)RGBChannels[1].at<uchar>(i, j) / 255;
-            float B = (float)RGBChannels[2].at<uchar>(i, j) / 255;
-            YUVChannels[0].at<uchar>(i, j) = (uchar)GET_Y_FROME_RGB;
-            YUVChannels[1].at<uchar>(i, j) = (uchar)GET_Cb_FROME_RGB;
-            YUVChannels[2].at<uchar>(i, j) = (uchar)GET_Cr_FROME_RGB;
+            float R = (float)RGBChannels[0].at<uchar>(i, j);
+            float G = (float)RGBChannels[1].at<uchar>(i, j);
+            float B = (float)RGBChannels[2].at<uchar>(i, j);
+            YUVChannels[0].at<uchar>(i, j) = (uchar)GET_Y_FROM_RGB;
+            YUVChannels[1].at<uchar>(i, j) = (uchar)GET_Cb_FROM_RGB;
+            YUVChannels[2].at<uchar>(i, j) = (uchar)GET_Cr_FROM_RGB;
         }
     }
 
@@ -252,7 +252,6 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"segueToDCT"]) {
         DCTViewController *destViewController = [segue destinationViewController];
-        [destViewController setYImage:self.YImage];
         if ([[self.chooseSubsamplingButton title] isEqualToString:@"4:4:4"]) {
             [destViewController setCbImage:self.CbImage444];
             [destViewController setCrImage:self.CrImage444];
@@ -266,6 +265,8 @@
             [destViewController setCbImage:self.CbImage411];
             [destViewController setCrImage:self.CrImage411];
         }
+        [destViewController setYImage:self.YImage];
+        [destViewController setOriginalImage:[MatConvert cvMatFromUIImage:self.originalImage]];
     }
 }
 

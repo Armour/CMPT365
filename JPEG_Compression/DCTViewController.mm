@@ -8,6 +8,7 @@
 
 #import "DCTViewController.h"
 #import "DisplayViewController.h"
+#import "FinalResultViewController.h"
 #import "MatConvert.h"
 
 #define PI 3.1415926535
@@ -51,8 +52,8 @@
 @property (strong, nonatomic) IBOutlet UIImageView *channelCrImageView;
 
 @property (strong, nonatomic) IBOutlet UIView *DCTUIView;
-@property (strong, nonatomic) IBOutlet UIView *QuantizedUIView;
-@property (strong, nonatomic) IBOutlet UIView *QuantizationMatrixUIView;
+@property (strong, nonatomic) IBOutlet UIView *quantizedUIView;
+@property (strong, nonatomic) IBOutlet UIView *quantizationMatrixUIView;
 
 @property (strong, nonatomic) IBOutlet UILabel *YImageSizeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *CbImageSizeLabel;
@@ -79,6 +80,7 @@
 - (void)runInverseDCT;
 - (void)runQuantization;
 - (void)runInverseQuantization;
+- (cv::Mat)getFinalImage;
 - (CGRect)calculateTheRectOfImageInUIImageView:(UIImageView *)imageView;
 
 @end
@@ -148,7 +150,7 @@
     DCTCollectionView.scrollEnabled = false;
     [DCTCollectionView setBackgroundColor:[UIColor clearColor]];
 
-    CGRect rectQuantized = [self.QuantizedUIView bounds];
+    CGRect rectQuantized = [self.quantizedUIView bounds];
     UICollectionView *QuantizedCollectionView = [[UICollectionView alloc] initWithFrame:rectQuantized collectionViewLayout:layout];
     QuantizedCollectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [QuantizedCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:QUANTIZED_CELL];
@@ -158,7 +160,7 @@
     QuantizedCollectionView.scrollEnabled = false;
     [QuantizedCollectionView setBackgroundColor:[UIColor clearColor]];
 
-    CGRect rectQuantizationMatrix = [self.QuantizationMatrixUIView bounds];
+    CGRect rectQuantizationMatrix = [self.quantizationMatrixUIView bounds];
     UICollectionView *QuantizationMatrixCollectionView = [[UICollectionView alloc] initWithFrame:rectQuantizationMatrix collectionViewLayout:layout];
     QuantizationMatrixCollectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [QuantizationMatrixCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:QUANTMAT_CELL];
@@ -169,8 +171,8 @@
     [QuantizationMatrixCollectionView setBackgroundColor:[UIColor clearColor]];
 
     [self.DCTUIView addSubview:DCTCollectionView];
-    [self.QuantizedUIView addSubview:QuantizedCollectionView];
-    [self.QuantizationMatrixUIView addSubview:QuantizationMatrixCollectionView];
+    [self.quantizedUIView addSubview:QuantizedCollectionView];
+    [self.quantizationMatrixUIView addSubview:QuantizationMatrixCollectionView];
 
     DCTBlock = cv::Mat(8, 8, CV_32S);
     quantizedBlock = cv::Mat(8, 8, CV_32S);
@@ -479,6 +481,38 @@
                                                          QuantizationMatrix:quantizationMatrix[5]].clone());
 }
 
+#pragma mark - Generate Final Image
+
+- (cv::Mat)getFinalImage {
+    std::vector<cv::Mat> RGBChannels;
+    RGBChannels.push_back(YInversedDCTMatrix[self.quantizationMatrixChoosedNumber].clone());
+    RGBChannels.push_back(YInversedDCTMatrix[self.quantizationMatrixChoosedNumber].clone());
+    RGBChannels.push_back(YInversedDCTMatrix[self.quantizationMatrixChoosedNumber].clone());
+
+    cv::Size size = YInversedDCTMatrix[self.quantizationMatrixChoosedNumber].size();
+    int imageWidth = size.width;
+    int imageHeight = size.height;
+    int scaleCbHeight = imageHeight / CbInversedDCTMatrix[self.quantizationMatrixChoosedNumber].size().height;
+    int scaleCrHeight = imageHeight / CrInversedDCTMatrix[self.quantizationMatrixChoosedNumber].size().height;
+    int scaleCbWidth = imageWidth / CbInversedDCTMatrix[self.quantizationMatrixChoosedNumber].size().width;
+    int scaleCrWidth = imageWidth / CrInversedDCTMatrix[self.quantizationMatrixChoosedNumber].size().width;
+
+    for (int i = 0; i < imageHeight; i++) {
+        for (int j = 0; j < imageWidth; j++) {
+            float Y = (float)YInversedDCTMatrix[self.quantizationMatrixChoosedNumber].at<uchar>(i, j);
+            float Cb = (float)CbInversedDCTMatrix[self.quantizationMatrixChoosedNumber].at<uchar>(i / scaleCbHeight, j / scaleCbWidth);
+            float Cr = (float)CrInversedDCTMatrix[self.quantizationMatrixChoosedNumber].at<uchar>(i / scaleCrHeight, j / scaleCrWidth);
+            RGBChannels[0].at<uchar>(i, j) = (uchar)GET_R_FROM_YCbCr;
+            RGBChannels[1].at<uchar>(i, j) = (uchar)GET_G_FROM_YCbCr;
+            RGBChannels[2].at<uchar>(i, j) = (uchar)GET_B_FROM_YCbCr;
+        }
+    }
+
+    cv::Mat RGBImage = cv::Mat(size, CV_8U);
+    cv::merge(RGBChannels, RGBImage);
+    return RGBImage;
+}
+
 #pragma mark - Imageview Image Rect
 
 - (CGRect)calculateTheRectOfImageInUIImageView:(UIImageView *)imgView {
@@ -582,19 +616,32 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"segueToDCTResult"]) {
         DisplayViewController *destViewController = [segue destinationViewController];
-        [destViewController setYImage:YDCTMatrix];
-        [destViewController setCbImage:CbDCTMatrix];
-        [destViewController setCrImage:CrDCTMatrix];
+        [destViewController setQuantizationMatrixChoosedNumber:self.quantizationMatrixChoosedNumber];
+        for (int i = 0; i < 6; i++) {
+            destViewController->YImage.push_back(YDCTMatrix.clone());
+            destViewController->CbImage.push_back(CbDCTMatrix.clone());
+            destViewController->CrImage.push_back(CrDCTMatrix.clone());
+        }
     } else if ([[segue identifier] isEqualToString:@"segueToQuantizedResult"]) {
         DisplayViewController *destViewController = [segue destinationViewController];
-        [destViewController setYImage:YQuantizedMatrix[self.quantizationMatrixChoosedNumber]];
-        [destViewController setCbImage:CbQuantizedMatrix[self.quantizationMatrixChoosedNumber]];
-        [destViewController setCrImage:CrQuantizedMatrix[self.quantizationMatrixChoosedNumber]];
+        [destViewController setQuantizationMatrixChoosedNumber:self.quantizationMatrixChoosedNumber];
+        for (int i = 0; i < 6; i++) {
+            destViewController->YImage.push_back(YQuantizedMatrix[i].clone());
+            destViewController->CbImage.push_back(CbQuantizedMatrix[i].clone());
+            destViewController->CrImage.push_back(CrQuantizedMatrix[i].clone());
+        }
     } else if ([[segue identifier] isEqualToString:@"segueToIDCTResult"]) {
         DisplayViewController *destViewController = [segue destinationViewController];
-        [destViewController setYImage:YInversedDCTMatrix[self.quantizationMatrixChoosedNumber]];
-        [destViewController setCbImage:CbInversedDCTMatrix[self.quantizationMatrixChoosedNumber]];
-        [destViewController setCrImage:CrInversedDCTMatrix[self.quantizationMatrixChoosedNumber]];
+        [destViewController setQuantizationMatrixChoosedNumber:self.quantizationMatrixChoosedNumber];
+        for (int i = 0; i < 6; i++) {
+            destViewController->YImage.push_back(YInversedDCTMatrix[i].clone());
+            destViewController->CbImage.push_back(CbInversedDCTMatrix[i].clone());
+            destViewController->CrImage.push_back(CrInversedDCTMatrix[i].clone());
+        }
+    } else if ([[segue identifier] isEqualToString:@"segueToFinalResult"]) {
+        FinalResultViewController *destViewController = [segue destinationViewController];
+        [destViewController setOriginalImage:self.originalImage];
+        [destViewController setFinalImage:[self getFinalImage]];
     }
 }
 
@@ -617,7 +664,7 @@
     self.quantizationMatrixChoosedNumber = row - 1;
     if (self.quantizationMatrixChoosedNumber != -1) {
         quantizationMatrixBlock = quantizationMatrix[self.quantizationMatrixChoosedNumber];
-        UICollectionView * collectionView = (UICollectionView *)[self.QuantizationMatrixUIView subviews][0];
+        UICollectionView * collectionView = (UICollectionView *)[self.quantizationMatrixUIView subviews][0];
         [collectionView reloadData];
     }
 }
