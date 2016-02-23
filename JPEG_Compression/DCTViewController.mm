@@ -60,9 +60,17 @@
 @property (nonatomic) cv::Mat YQuantizedMatrix;
 @property (nonatomic) cv::Mat CbQuantizedMatrix;
 @property (nonatomic) cv::Mat CrQuantizedMatrix;
-@property (nonatomic) cv::Mat YIDCTMatrix;
-@property (nonatomic) cv::Mat CbIDCTMatrix;
-@property (nonatomic) cv::Mat CrIDCTMatrix;
+@property (nonatomic) cv::Mat YInversedQuantizedMatrix;
+@property (nonatomic) cv::Mat CbInversedQuantizedMatrix;
+@property (nonatomic) cv::Mat CrInversedQuantizedMatrix;
+@property (nonatomic) cv::Mat YInversedDCTMatrix;
+@property (nonatomic) cv::Mat CbInversedDCTMatrix;
+@property (nonatomic) cv::Mat CrInversedDCTMatrix;
+@property (nonatomic) cv::Mat DCTBlock;
+@property (nonatomic) cv::Mat QuantizedBlock;
+@property (nonatomic) cv::Mat QuantizationMatrixBlock;
+
+@property (nonatomic) BOOL isTouched;
 
 - (void)initImageView;
 - (void)initPickerView;
@@ -75,7 +83,7 @@
 - (void)runQuantization;
 - (void)runInverseQuantization;
 - (void)runInverseDCT;
-//- (CGRect)calculateTheRectOfImageInUIImageView:(UIImageView *)imageView;
+- (CGRect)calculateTheRectOfImageInUIImageView:(UIImageView *)imageView;
 
 @end
 
@@ -87,17 +95,33 @@
 - (void)initImageView {
     [self.view layoutIfNeeded];
 
+    UITapGestureRecognizer *tapY = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(YImageTapped:)];
+    UITapGestureRecognizer *tapCb = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(CbImageTapped:)];
+    UITapGestureRecognizer *tapCr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(CrImageTapped:)];
+
+    tapY.delegate = self;
+    tapCb.delegate = self;
+    tapCr.delegate = self;
+
     [self.channelYImageView setImage:[MatConvert UIImageFromCVMat:self.YImage]];
     [self.channelYImageView setBackgroundColor:[UIColor blackColor]];
     [self.channelYImageView setContentMode:UIViewContentModeScaleAspectFit];
+    [self.channelYImageView addGestureRecognizer:tapY];
+    [self.channelYImageView setUserInteractionEnabled:true];
 
     [self.channelCbImageView setImage:[MatConvert UIImageFromCVMat:self.CbImage]];
     [self.channelCbImageView setBackgroundColor:[UIColor blackColor]];
     [self.channelCbImageView setContentMode:UIViewContentModeScaleAspectFit];
+    [self.channelCbImageView addGestureRecognizer:tapCb];
+    [self.channelCbImageView setUserInteractionEnabled:true];
 
     [self.channelCrImageView setImage:[MatConvert UIImageFromCVMat:self.CrImage]];
     [self.channelCrImageView setBackgroundColor:[UIColor blackColor]];
     [self.channelCrImageView setContentMode:UIViewContentModeScaleAspectFit];
+    [self.channelCrImageView addGestureRecognizer:tapCr];
+    [self.channelCrImageView setUserInteractionEnabled:true];
+
+    self.isTouched = false;
 }
 
 - (void)initPickerView {
@@ -151,6 +175,10 @@
     [self.DCTUIView addSubview:DCTCollectionView];
     [self.QuantizedUIView addSubview:QuantizedCollectionView];
     [self.QuantizationMatrixUIView addSubview:QuantizationMatrixCollectionView];
+
+    self.DCTBlock = cv::Mat(8, 8, CV_32S);
+    self.QuantizedBlock = cv::Mat(8, 8, CV_32S);
+    self.QuantizationMatrixBlock = cv::Mat(8, 8, CV_32S);
 }
 
 - (void)initSizeLabel {
@@ -279,8 +307,34 @@
 
 #pragma mark - Inverse DCT
 
-- (void)runInverseDCT {
+- (cv::Mat)InverseDCT8x8WithSource:(const cv::Mat &)src {
+    int width = src.size().width / 8;
+    int height = src.size().height / 8;
 
+    cv::Mat dest = cv::Mat(height * 8, width * 8, CV_8U);
+
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            cv::Mat tmpMat = cv::Mat(8, 8, CV_32F);
+            cv::Mat tmpDCTMat = cv::Mat(8, 8, CV_32F);
+            for (int mi = 0; mi < 8; mi++)
+                for (int mj = 0; mj < 8; mj++)
+                    tmpMat.at<float>(mi, mj) = (float)src.at<int>(i * 8 + mi, j * 8 + mj);
+
+            tmpDCTMat = self.DCT8x8Matrix.t() * tmpMat * self.DCT8x8Matrix;
+
+            for (int mi = 0; mi < 8; mi++)
+                for (int mj = 0; mj < 8; mj++)
+                    dest.at<uchar>(i * 8 + mi, j * 8 + mj) = (uchar)tmpDCTMat.at<float>(mi, mj);
+        }
+    }
+    return dest;
+}
+
+- (void)runInverseDCT {
+    self.YInversedDCTMatrix = [self InverseDCT8x8WithSource:self.YInversedQuantizedMatrix];
+    self.CbInversedDCTMatrix = [self InverseDCT8x8WithSource:self.CbInversedQuantizedMatrix];
+    self.CrInversedDCTMatrix = [self InverseDCT8x8WithSource:self.CrInversedQuantizedMatrix];
 }
 
 #pragma mark - Quantization
@@ -295,22 +349,22 @@
         for (int j = 0; j < width; j++) {
             switch (number) {
                 case 0:
-                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_0.at<int>(i / 8, j / 8);
+                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_0.at<int>(i % 8, j % 8);
                     break;
                 case 1:
-                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_1.at<int>(i / 8, j / 8);
+                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_1.at<int>(i % 8, j % 8);
                     break;
                 case 2:
-                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_2.at<int>(i / 8, j / 8);
+                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_2.at<int>(i % 8, j % 8);
                     break;
                 case 3:
-                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_3.at<int>(i / 8, j / 8);
+                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_3.at<int>(i % 8, j % 8);
                     break;
                 case 4:
-                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_4.at<int>(i / 8, j / 8);
+                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_4.at<int>(i % 8, j % 8);
                     break;
                 case 5:
-                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_5.at<int>(i / 8, j / 8);
+                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_5.at<int>(i % 8, j % 8);
                     break;
                 default:
                     break;
@@ -332,12 +386,53 @@
 
 #pragma mark - Inverse Quantization
 
-- (void)runInverseQuantization {
+- (cv::Mat)InverseQuantizationWithSource:(const cv::Mat&)src QuantizationMatrix:(NSInteger)number {
+    int width = src.size().width;
+    int height = src.size().height;
 
+    cv::Mat dest = cv::Mat(height, width, CV_32S);
+    cv::Mat tmpMat = cv::Mat(height, width, CV_32S);
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            switch (number) {
+                case 0:
+                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_0.at<int>(i % 8, j % 8);
+                    break;
+                case 1:
+                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_1.at<int>(i % 8, j % 8);
+                    break;
+                case 2:
+                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_2.at<int>(i % 8, j % 8);
+                    break;
+                case 3:
+                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_3.at<int>(i % 8, j % 8);
+                    break;
+                case 4:
+                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_4.at<int>(i % 8, j % 8);
+                    break;
+                case 5:
+                    tmpMat.at<int>(i, j) = QUANTIZATION_MATRIX_5.at<int>(i % 8, j % 8);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    dest = src.mul(tmpMat);
+    return dest;
+}
+
+- (void)runInverseQuantization {
+    self.YInversedQuantizedMatrix = [self InverseQuantizationWithSource:self.YQuantizedMatrix
+                                      QuantizationMatrix:self.quantizationMatrixNumber];
+    self.CbInversedQuantizedMatrix = [self InverseQuantizationWithSource:self.CbQuantizedMatrix
+                                       QuantizationMatrix:self.quantizationMatrixNumber];
+    self.CrInversedQuantizedMatrix = [self InverseQuantizationWithSource:self.CrQuantizedMatrix
+                                       QuantizationMatrix:self.quantizationMatrixNumber];
 }
 
 #pragma mark - Imageview Image Rect
-/*
+
 - (CGRect)calculateTheRectOfImageInUIImageView:(UIImageView *)imgView {
     CGSize imgViewSize = imgView.frame.size;                    // Size of UIImageView
     CGSize imgSize = imgView.image.size;                        // Size of the image, currently displayed
@@ -352,7 +447,7 @@
     imageRect.origin.y += (imgViewSize.height - imageRect.size.height) / 2;
 
     return imageRect;
-}*/
+}
 
 #pragma mark - Button Click Event
 
@@ -398,6 +493,24 @@
     }
 }
 
+- (void)YImageTapped:(UITapGestureRecognizer *)sender {
+    [self TapGestureEvent:sender];
+    CGPoint touchPoint = [sender locationInView:self.channelYImageView];
+    NSLog(@"x: %f y: %f", touchPoint.x, touchPoint.y);
+}
+
+- (void)CbImageTapped:(UITapGestureRecognizer *)sender {
+    [self TapGestureEvent:sender];
+    CGPoint touchPoint = [sender locationInView:self.channelCbImageView];
+    NSLog(@"x: %f y: %f", touchPoint.x, touchPoint.y);
+}
+
+- (void)CrImageTapped:(UITapGestureRecognizer *)sender {
+    [self TapGestureEvent:sender];
+    CGPoint touchPoint = [sender locationInView:self.channelCrImageView];
+    NSLog(@"x: %f y: %f", touchPoint.x, touchPoint.y);
+}
+
 #pragma mark - Prepare Segue
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -413,9 +526,9 @@
         [destViewController setCrImage:self.CrQuantizedMatrix];
     } else if ([[segue identifier] isEqualToString:@"segueToIDCTResult"]) {
         DisplayViewController *destViewController = [segue destinationViewController];
-        [destViewController setYImage:self.YIDCTMatrix];
-        [destViewController setCbImage:self.CbIDCTMatrix];
-        [destViewController setCrImage:self.CrIDCTMatrix];
+        [destViewController setYImage:self.YInversedDCTMatrix];
+        [destViewController setCbImage:self.CbInversedDCTMatrix];
+        [destViewController setCrImage:self.CrInversedDCTMatrix];
     }
 }
 
@@ -470,6 +583,18 @@
     [numberLabel setTextAlignment:NSTextAlignmentCenter];
     [numberLabel setText:@"?"];
     [numberLabel setFont:[UIFont systemFontOfSize:5]];
+    if (self.isTouched) {
+        if (collectionView.tag == 1) {
+            [numberLabel setText:[[NSString alloc] initWithFormat:@"%d",
+                                  self.DCTBlock.at<int>((int)indexPath.item / 8, (int)indexPath.item % 8)]];
+        } else if (collectionView.tag == 2) {
+            [numberLabel setText:[[NSString alloc] initWithFormat:@"%d",
+                                  self.QuantizedBlock.at<int>((int)indexPath.item / 8, (int)indexPath.item % 8)]];
+        } else if (collectionView.tag == 3) {
+            [numberLabel setText:[[NSString alloc] initWithFormat:@"%d",
+                                  self.QuantizationMatrixBlock.at<int>((int)indexPath.item / 8, (int)indexPath.item % 8)]];
+        }
+    }
     [cell addSubview:numberLabel];
     return cell;
 }
@@ -499,7 +624,7 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     float width = [self.DCTUIView bounds].size.width / 8.0;
     float height = [self.DCTUIView bounds].size.height / 8.0;
-    return CGSizeMake(width, height); //14,10
+    return CGSizeMake(width, height);
 }
 
 #pragma mark - Hightlight Rect

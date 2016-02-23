@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <opencv2/opencv.hpp>
 
-@interface DCTViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface DCTViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate>
 
 @property (nonatomic) cv::Mat YImage;
 @property (nonatomic) cv::Mat CbImage;
