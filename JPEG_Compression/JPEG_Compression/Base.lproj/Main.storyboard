@@ -287,8 +287,8 @@
                                 <nil key="highlightedColor"/>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="tgQ-hO-NYJ"/>
                                         <exclude reference="AgP-aG-D0G"/>
+                                        <exclude reference="tgQ-hO-NYJ"/>
                                     </mask>
                                 </variation>
                             </label>
@@ -364,8 +364,8 @@
                                 <nil key="highlightedColor"/>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="aDE-ux-5JX"/>
                                         <exclude reference="EEH-pa-U1H"/>
+                                        <exclude reference="aDE-ux-5JX"/>
                                     </mask>
                                 </variation>
                             </label>
@@ -489,8 +489,8 @@
                                 <nil key="highlightedColor"/>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="sBy-f0-ha9"/>
                                         <exclude reference="3ZO-GQ-fWI"/>
+                                        <exclude reference="sBy-f0-ha9"/>
                                     </mask>
                                 </variation>
                             </label>
@@ -592,8 +592,8 @@
                                 <nil key="highlightedColor"/>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="t1H-NX-kJk"/>
                                         <exclude reference="70U-Wn-1rC"/>
+                                        <exclude reference="t1H-NX-kJk"/>
                                     </mask>
                                 </variation>
                             </label>
@@ -1130,8 +1130,8 @@
                                         <nil key="highlightedColor"/>
                                         <variation key="default">
                                             <mask key="constraints">
-                                                <exclude reference="sfb-zc-fLo"/>
                                                 <exclude reference="XJ7-S8-a9M"/>
+                                                <exclude reference="sfb-zc-fLo"/>
                                             </mask>
                                         </variation>
                                     </label>
@@ -1366,8 +1366,8 @@
                                 <nil key="highlightedColor"/>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="FsK-pk-W5p"/>
                                         <exclude reference="5Fg-6a-baK"/>
+                                        <exclude reference="FsK-pk-W5p"/>
                                     </mask>
                                 </variation>
                             </label>
@@ -1443,8 +1443,8 @@
                                 <nil key="highlightedColor"/>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="tDU-G6-Ams"/>
                                         <exclude reference="V3Q-dG-WQO"/>
+                                        <exclude reference="tDU-G6-Ams"/>
                                     </mask>
                                 </variation>
                             </label>

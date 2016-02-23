@@ -75,6 +75,7 @@
 - (void)initSizeLabel;
 - (void)initDCTMatrix;
 - (void)initQuantizationMatrix;
+- (void)updateCollectionViewData;
 - (void)clipTo8nx8nMatrix;
 - (void)runDCT;
 - (void)runInverseDCT;
@@ -256,6 +257,15 @@
     quantizationMatrix.push_back(constantQuantizationMatrix.clone());
     quantizationMatrix.push_back(lowConstantQuantizationMatrix.clone());
     quantizationMatrix.push_back(highConstantQuantizationMatrix.clone());
+}
+
+- (void)updateCollectionViewData {
+    UICollectionView * DCTCollectionView = (UICollectionView *)[self.DCTUIView subviews][0];
+    UICollectionView * quantizedCollectionView = (UICollectionView *)[self.quantizedUIView subviews][0];
+    UICollectionView * quantizationMatrixCollectionView = (UICollectionView *)[self.quantizationMatrixUIView subviews][0];
+    [DCTCollectionView reloadData];
+    [quantizedCollectionView reloadData];
+    [quantizationMatrixCollectionView reloadData];
 }
 
 #pragma mark - Life Cycle
@@ -592,23 +602,69 @@
 
 - (void)YImageTapped:(UITapGestureRecognizer *)sender {
     [self TapGestureEvent:sender];
-    self.isTouchedImageView = true;
     CGPoint touchPoint = [sender locationInView:self.channelYImageView];
-    NSLog(@"x: %f y: %f", touchPoint.x, touchPoint.y);
+    CGRect rect = [self calculateTheRectOfImageInUIImageView:self.channelYImageView];
+    if (touchPoint.x >= rect.origin.x && touchPoint.x <= rect.origin.x + rect.size.width &&
+        touchPoint.y >= rect.origin.y && touchPoint.y <= rect.origin.y + rect.size.height) {
+        int xPosition = (int)((touchPoint.x - rect.origin.x) / rect.size.width * (self.channelYImageView.image.size.width / 8));
+        int yPosition = (int)((touchPoint.y - rect.origin.y) / rect.size.height * (self.channelYImageView.image.size.height / 8));
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                DCTBlock.at<int>(i, j) = YDCTMatrix.at<int>(yPosition * 8 + i, xPosition * 8 + j);
+                if (self.quantizationMatrixChoosedNumber != -1) {
+                    quantizedBlock.at<int>(i, j) =
+                    YQuantizedMatrix[self.quantizationMatrixChoosedNumber].at<int>(yPosition * 8 + i, xPosition * 8 + j);
+                }
+            }
+        }
+        self.isTouchedImageView = true;
+        [self updateCollectionViewData];
+    }
 }
 
 - (void)CbImageTapped:(UITapGestureRecognizer *)sender {
     [self TapGestureEvent:sender];
     self.isTouchedImageView = true;
     CGPoint touchPoint = [sender locationInView:self.channelCbImageView];
-    NSLog(@"x: %f y: %f", touchPoint.x, touchPoint.y);
+    CGRect rect = [self calculateTheRectOfImageInUIImageView:self.channelCbImageView];
+    if (touchPoint.x >= rect.origin.x && touchPoint.x <= rect.origin.x + rect.size.width &&
+        touchPoint.y >= rect.origin.y && touchPoint.y <= rect.origin.y + rect.size.height) {
+        int xPosition = (int)((touchPoint.x - rect.origin.x) / rect.size.width * (self.channelCbImageView.image.size.width / 8));
+        int yPosition = (int)((touchPoint.y - rect.origin.y) / rect.size.height * (self.channelCbImageView.image.size.height / 8));
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                DCTBlock.at<int>(i, j) = CbDCTMatrix.at<int>(yPosition * 8 + i, xPosition * 8 + j);
+                if (self.quantizationMatrixChoosedNumber != -1) {
+                    quantizedBlock.at<int>(i, j) =
+                    CbQuantizedMatrix[self.quantizationMatrixChoosedNumber].at<int>(yPosition * 8 + i, xPosition * 8 + j);
+                }
+            }
+        }
+        self.isTouchedImageView = true;
+        [self updateCollectionViewData];
+    }
 }
 
 - (void)CrImageTapped:(UITapGestureRecognizer *)sender {
     [self TapGestureEvent:sender];
-    self.isTouchedImageView = true;
     CGPoint touchPoint = [sender locationInView:self.channelCrImageView];
-    NSLog(@"x: %f y: %f", touchPoint.x, touchPoint.y);
+    CGRect rect = [self calculateTheRectOfImageInUIImageView:self.channelCrImageView];
+    if (touchPoint.x >= rect.origin.x && touchPoint.x <= rect.origin.x + rect.size.width &&
+        touchPoint.y >= rect.origin.y && touchPoint.y <= rect.origin.y + rect.size.height) {
+        int xPosition = (int)((touchPoint.x - rect.origin.x) / rect.size.width * (self.channelCrImageView.image.size.width / 8));
+        int yPosition = (int)((touchPoint.y - rect.origin.y) / rect.size.height * (self.channelCrImageView.image.size.height / 8));
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                DCTBlock.at<int>(i, j) = CrDCTMatrix.at<int>(yPosition * 8 + i, xPosition * 8 + j);
+                if (self.quantizationMatrixChoosedNumber != -1) {
+                    quantizedBlock.at<int>(i, j) =
+                    CrQuantizedMatrix[self.quantizationMatrixChoosedNumber].at<int>(yPosition * 8 + i, xPosition * 8 + j);
+                }
+            }
+        }
+        self.isTouchedImageView = true;
+        [self updateCollectionViewData];
+    }
 }
 
 #pragma mark - Prepare Segue
@@ -664,8 +720,14 @@
     self.quantizationMatrixChoosedNumber = row - 1;
     if (self.quantizationMatrixChoosedNumber != -1) {
         quantizationMatrixBlock = quantizationMatrix[self.quantizationMatrixChoosedNumber];
-        UICollectionView * collectionView = (UICollectionView *)[self.quantizationMatrixUIView subviews][0];
-        [collectionView reloadData];
+        if (self.isTouchedImageView) {
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    quantizedBlock.at<int>(i, j) = DCTBlock.at<int>(i, j) / quantizationMatrixBlock.at<int>(i, j);
+                }
+            }
+        }
+        [self updateCollectionViewData];
     }
 }
 
@@ -693,14 +755,15 @@
     [numberLabel setTextAlignment:NSTextAlignmentCenter];
     [numberLabel setText:@"?"];
     [numberLabel setFont:[UIFont systemFontOfSize:7]];
+    [numberLabel setAdjustsFontSizeToFitWidth:true];
     if (self.isTouchedImageView) {
         if (collectionView.tag == 1) {
             [numberLabel setText:[[NSString alloc] initWithFormat:@"%d",
                                   DCTBlock.at<int>((int)indexPath.item / 8, (int)indexPath.item % 8)]];
-        } else if (collectionView.tag == 2) {
+        } else if (collectionView.tag == 2 && self.quantizationMatrixChoosedNumber != -1) {
             [numberLabel setText:[[NSString alloc] initWithFormat:@"%d",
                                   quantizedBlock.at<int>((int)indexPath.item / 8, (int)indexPath.item % 8)]];
-        } else if (collectionView.tag == 3) {
+        } else if (collectionView.tag == 3 && self.quantizationMatrixChoosedNumber != -1) {
             [numberLabel setText:[[NSString alloc] initWithFormat:@"%d",
                                   quantizationMatrixBlock.at<int>((int)indexPath.item / 8, (int)indexPath.item % 8)]];
         }

@@ -65,6 +65,9 @@
     self.isChoosingQuantizationMatrix = false;
 
     self.originalQuantizationMatrixPickerViewCenterPoint = self.quantizationMatrixPickerView.center;
+
+    [self.quantizationMatrixPickerView selectRow:self.quantizationMatrixChoosedNumber inComponent:0 animated:YES];
+    [self.chooseQuantizationMatrixButton setTitle: [self.quantizationMatrixPickerData objectAtIndex:self.quantizationMatrixChoosedNumber]];
 }
 
 - (void)initSizeLabel {
