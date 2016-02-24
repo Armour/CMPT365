@@ -74,10 +74,10 @@ In this assignment, I implemented four kinds of chroma subsampling, DCT and six 
 
 ## App screen shots
 
-<img src="Images/0.jpg" width="300" height="500" /><img src="Images/1.jpg" width="300" height="500" /><img src="Images/2.jpg" width="300" height="500" />
+<img src="Images/0.jpg" width="280" height="460" /><img src="Images/1.jpg" width="280" height="460" /><img src="Images/2.jpg" width="280" height="460" />
 
-<img src="Images/3.jpg" width="300" height="500" /><img src="Images/4.jpg" width="300" height="500" /><img src="Images/5.jpg" width="300" height="500" />
+<img src="Images/3.jpg" width="280" height="460" /><img src="Images/4.jpg" width="280" height="460" /><img src="Images/5.jpg" width="280" height="460" />
 
-<img src="Images/6.jpg" width="300" height="500" /><img src="Images/7.jpg" width="300" height="500" /><img src="Images/8.jpg" width="300" height="500" />
+<img src="Images/6.jpg" width="280" height="460" /><img src="Images/7.jpg" width="280" height="460" /><img src="Images/8.jpg" width="280" height="460" />
 
 
