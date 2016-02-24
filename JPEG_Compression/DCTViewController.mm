@@ -404,7 +404,11 @@
             tmpMat.at<float>(i, j) = quantMat.at<float>(i % 8, j % 8);
         }
     }
-    cv::divide(src, tmpMat, dest);
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            dest.at<float>(i, j) = roundf(src.at<float>(i, j) / tmpMat.at<float>(i, j));
+        }
+    }
     return dest;
 }
 
@@ -640,26 +644,38 @@
     if ([[segue identifier] isEqualToString:@"segueToDCTResult"]) {
         DisplayViewController *destViewController = [segue destinationViewController];
         [destViewController setQuantizationMatrixChoosedNumber:self.quantizationMatrixChoosedNumber];
+        cv::Mat Y, Cb, Cr;
+        YDCTMatrix.convertTo(Y, CV_32S);
+        CbDCTMatrix.convertTo(Cb, CV_32S);
+        CrDCTMatrix.convertTo(Cr, CV_32S);
         for (int i = 0; i < 6; i++) {
-            destViewController->YImage.push_back(YDCTMatrix.clone());
-            destViewController->CbImage.push_back(CbDCTMatrix.clone());
-            destViewController->CrImage.push_back(CrDCTMatrix.clone());
+            destViewController->YImage.push_back(Y.clone());
+            destViewController->CbImage.push_back(Cb.clone());
+            destViewController->CrImage.push_back(Cr.clone());
         }
     } else if ([[segue identifier] isEqualToString:@"segueToQuantizedResult"]) {
         DisplayViewController *destViewController = [segue destinationViewController];
         [destViewController setQuantizationMatrixChoosedNumber:self.quantizationMatrixChoosedNumber];
         for (int i = 0; i < 6; i++) {
-            destViewController->YImage.push_back(YQuantizedMatrix[i].clone());
-            destViewController->CbImage.push_back(CbQuantizedMatrix[i].clone());
-            destViewController->CrImage.push_back(CrQuantizedMatrix[i].clone());
+            cv::Mat Y, Cb, Cr;
+            YQuantizedMatrix[i].convertTo(Y, CV_32S);
+            CbQuantizedMatrix[i].convertTo(Cb, CV_32S);
+            CrQuantizedMatrix[i].convertTo(Cr, CV_32S);
+            destViewController->YImage.push_back(Y.clone());
+            destViewController->CbImage.push_back(Cb.clone());
+            destViewController->CrImage.push_back(Cr.clone());
         }
     } else if ([[segue identifier] isEqualToString:@"segueToIDCTResult"]) {
         DisplayViewController *destViewController = [segue destinationViewController];
         [destViewController setQuantizationMatrixChoosedNumber:self.quantizationMatrixChoosedNumber];
         for (int i = 0; i < 6; i++) {
-            destViewController->YImage.push_back(YInversedDCTMatrix[i].clone());
-            destViewController->CbImage.push_back(CbInversedDCTMatrix[i].clone());
-            destViewController->CrImage.push_back(CrInversedDCTMatrix[i].clone());
+            cv::Mat Y, Cb, Cr;
+            YInversedDCTMatrix[i].convertTo(Y, CV_8U);
+            CbInversedDCTMatrix[i].convertTo(Cb, CV_8U);
+            CrInversedDCTMatrix[i].convertTo(Cr, CV_8U);
+            destViewController->YImage.push_back(Y.clone());
+            destViewController->CbImage.push_back(Cb.clone());
+            destViewController->CrImage.push_back(Cr.clone());
         }
     } else if ([[segue identifier] isEqualToString:@"segueToFinalResult"]) {
         FinalResultViewController *destViewController = [segue destinationViewController];
