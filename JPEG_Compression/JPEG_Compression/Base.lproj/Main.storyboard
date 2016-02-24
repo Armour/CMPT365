@@ -1433,6 +1433,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="MainPage" width="256" height="256"/>
+        <image name="MainPage" width="512" height="512"/>
     </resources>
 </document>

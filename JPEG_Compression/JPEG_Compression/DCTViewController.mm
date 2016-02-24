@@ -457,10 +457,15 @@
     cv::Size size = YInversedDCTMatrix[number].size();
     int imageWidth = size.width;
     int imageHeight = size.height;
-    int scaleCbHeight = imageHeight / CbInversedDCTMatrix[number].size().height;
-    int scaleCrHeight = imageHeight / CrInversedDCTMatrix[number].size().height;
-    int scaleCbWidth = imageWidth / CbInversedDCTMatrix[number].size().width;
-    int scaleCrWidth = imageWidth / CrInversedDCTMatrix[number].size().width;
+    int CbHeight = CbInversedDCTMatrix[number].size().height;
+    int CrHeight = CrInversedDCTMatrix[number].size().height;
+    int CbWidth = CbInversedDCTMatrix[number].size().width;
+    int CrWidth = CrInversedDCTMatrix[number].size().width;
+    int scaleCbHeight = imageHeight / CbHeight;
+    int scaleCrHeight = imageHeight / CrHeight;
+    int scaleCbWidth = imageWidth / CbWidth;
+    int scaleCrWidth = imageWidth / CrWidth;
+
     cv::Mat tmpMat = cv::Mat(imageHeight, imageWidth, CV_8U);
     RGBChannels.push_back(tmpMat.clone());
     RGBChannels.push_back(tmpMat.clone());
@@ -469,8 +474,10 @@
     for (int i = 0; i < imageHeight; i++) {
         for (int j = 0; j < imageWidth; j++) {
             float Y = YInversedDCTMatrix[number].at<float>(i, j);
-            float Cb = CbInversedDCTMatrix[number].at<float>(i / scaleCbHeight, j / scaleCbWidth);
-            float Cr = CrInversedDCTMatrix[number].at<float>(i / scaleCrHeight, j / scaleCrWidth);
+            float Cb = CbInversedDCTMatrix[number].at<float>(MIN(i / scaleCbHeight, CbHeight - 1),
+                                                             MIN(j / scaleCbWidth, CbWidth - 1));
+            float Cr = CrInversedDCTMatrix[number].at<float>(MIN(i / scaleCrHeight, CrHeight - 1),
+                                                             MIN(j / scaleCrWidth, CrWidth - 1));
             float R = GET_R_FROM_YCbCr;
             float G = GET_G_FROM_YCbCr;
             float B = GET_B_FROM_YCbCr;
