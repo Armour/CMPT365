@@ -74,11 +74,10 @@ In this assignment, I implemented four kinds of chroma subsampling, DCT and six 
 
 ## App screen shots
 
-![img](Images/interface.jpg)
-![img](Images/interface.jpg)
-![img](Images/interface.jpg)
-![img](Images/interface.jpg)
-![img](Images/interface.jpg)
-![img](Images/interface.jpg)![img](Images/interface.jpg)
-<img src="Images/0.jpg" style="width: 220px;"/><img src="Images/1.jpg" style="width: 220px;"/><img src="Images/2.jpg" style="width: 220px;"/><img src="Images/3.jpg" style="width: 220px;"/><img src="Images/4.jpg" style="width: 220px;"/><img src="Images/5.jpg" style="width: 220px;"/><img src="Images/6.jpg" style="width: 220px;"/><img src="Images/7.jpg" style="width: 220px;"/><img src="Images/8.jpg" style="width: 220px;"/>
+<img src="Images/0.jpg" width="300" height="500" /><img src="Images/1.jpg" width="300" height="500" /><img src="Images/2.jpg" width="300" height="500" />
+
+<img src="Images/3.jpg" width="300" height="500" /><img src="Images/4.jpg" width="300" height="500" /><img src="Images/5.jpg" width="300" height="500" />
+
+<img src="Images/6.jpg" width="300" height="500" /><img src="Images/7.jpg" width="300" height="500" /><img src="Images/8.jpg" width="300" height="500" />
+
 
