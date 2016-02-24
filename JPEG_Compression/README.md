@@ -61,19 +61,24 @@ In this assignment, I implemented four kinds of chroma subsampling, DCT and six 
 - Used OpenCV to handle matrix computation
 
 - Used Github to do the version control 
-    - [https://github.com/Armour/CMPT365-Assignments](https://github.com/Armour/CMPT365-Assignments)
-    
-    <img src="images/github.jpg" style="width: 600px;"/>
+
+![img](Images/github.jpg)
 
 - Followed Google Objective-C / Objective-C++ Style
 
 - Self-designed the iOS interface, work for both iPhone and iPad
 
-    <img src="images/interface.jpg" style="width: 600px;"/>
+![img](Images/interface.jpg)
 
 - Coded 3000+ lines of code within four days
 
 ## App screen shots
 
-<img src="images/0.jpg" style="width: 220px;"/><img src="images/1.jpg" style="width: 220px;"/><img src="images/2.jpg" style="width: 220px;"/><img src="images/3.jpg" style="width: 220px;"/><img src="images/4.jpg" style="width: 220px;"/><img src="images/5.jpg" style="width: 220px;"/><img src="images/6.jpg" style="width: 220px;"/><img src="images/7.jpg" style="width: 220px;"/><img src="images/8.jpg" style="width: 220px;"/>
+![img](Images/interface.jpg)
+![img](Images/interface.jpg)
+![img](Images/interface.jpg)
+![img](Images/interface.jpg)
+![img](Images/interface.jpg)
+![img](Images/interface.jpg)![img](Images/interface.jpg)
+<img src="Images/0.jpg" style="width: 220px;"/><img src="Images/1.jpg" style="width: 220px;"/><img src="Images/2.jpg" style="width: 220px;"/><img src="Images/3.jpg" style="width: 220px;"/><img src="Images/4.jpg" style="width: 220px;"/><img src="Images/5.jpg" style="width: 220px;"/><img src="Images/6.jpg" style="width: 220px;"/><img src="Images/7.jpg" style="width: 220px;"/><img src="Images/8.jpg" style="width: 220px;"/>
 
