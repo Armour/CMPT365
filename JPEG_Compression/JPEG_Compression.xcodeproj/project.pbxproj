@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		762523FB1C7A469D00E143FE /* DCTViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 762523FA1C7A469D00E143FE /* DCTViewController.mm */; };
+		762831C01C7D7F1F00C03E5B /* DCTViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 762831BF1C7D7F1F00C03E5B /* DCTViewController.mm */; };
 		76D953A41C77D00C00A787F7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 76D953A31C77D00C00A787F7 /* main.m */; };
 		76D953A71C77D00C00A787F7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 76D953A61C77D00C00A787F7 /* AppDelegate.m */; };
 		76D953AA1C77D00C00A787F7 /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 76D953A91C77D00C00A787F7 /* ViewController.mm */; };
@@ -48,8 +48,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		762523FA1C7A469D00E143FE /* DCTViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = DCTViewController.mm; path = ../DCTViewController.mm; sourceTree = "<group>"; };
 		762523FC1C7A46BA00E143FE /* DCTViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DCTViewController.h; sourceTree = "<group>"; };
+		762831BF1C7D7F1F00C03E5B /* DCTViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DCTViewController.mm; sourceTree = "<group>"; };
 		76D9539F1C77D00C00A787F7 /* JPEG_Compression.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JPEG_Compression.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		76D953A31C77D00C00A787F7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		76D953A51C77D00C00A787F7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -146,7 +146,7 @@
 				76D953EE1C79131200A787F7 /* ChangeColorViewController.h */,
 				76D953EC1C7912E900A787F7 /* ChangeColorViewController.mm */,
 				762523FC1C7A46BA00E143FE /* DCTViewController.h */,
-				762523FA1C7A469D00E143FE /* DCTViewController.mm */,
+				762831BF1C7D7F1F00C03E5B /* DCTViewController.mm */,
 				76E0EB341C7BA020003663DF /* DisplayViewController.h */,
 				76E0EB321C7BA00F003663DF /* DisplayViewController.mm */,
 				76E0EB371C7C47D5003663DF /* FinalResultViewController.h */,
@@ -326,13 +326,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				762523FB1C7A469D00E143FE /* DCTViewController.mm in Sources */,
 				76D953ED1C7912E900A787F7 /* ChangeColorViewController.mm in Sources */,
 				76D953B01C77D00C00A787F7 /* JPEG_Compression.xcdatamodeld in Sources */,
 				76D953AA1C77D00C00A787F7 /* ViewController.mm in Sources */,
 				76E0EB361C7C47BC003663DF /* FinalResultViewController.mm in Sources */,
 				76D953E31C790B4A00A787F7 /* MatConvert.mm in Sources */,
 				76D953A71C77D00C00A787F7 /* AppDelegate.m in Sources */,
+				762831C01C7D7F1F00C03E5B /* DCTViewController.mm in Sources */,
 				76D953A41C77D00C00A787F7 /* main.m in Sources */,
 				76E0EB331C7BA00F003663DF /* DisplayViewController.mm in Sources */,
 			);
