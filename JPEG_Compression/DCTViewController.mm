@@ -178,9 +178,9 @@
     [self.quantizedUIView addSubview:QuantizedCollectionView];
     [self.quantizationMatrixUIView addSubview:QuantizationMatrixCollectionView];
 
-    DCTBlock = cv::Mat(8, 8, CV_32S);
-    quantizedBlock = cv::Mat(8, 8, CV_32S);
-    quantizationMatrixBlock = cv::Mat(8, 8, CV_32S);
+    DCTBlock = cv::Mat(8, 8, CV_32F);
+    quantizedBlock = cv::Mat(8, 8, CV_32F);
+    quantizationMatrixBlock = cv::Mat(8, 8, CV_32F);
 }
 
 - (void)initSizeLabel {
@@ -236,21 +236,21 @@
                                      {196, 256, 300, 300, 300, 300, 300, 300},
                                      {288, 300, 300, 300, 300, 300, 300, 300}};
 
-    cv::Mat nonUniformQuantizationMatrix = cv::Mat(8, 8, CV_32S);
-    cv::Mat lowNonUniformQuantizationMatrix = cv::Mat(8, 8, CV_32S);
-    cv::Mat highNonUniformQuantizationMatrix = cv::Mat(8, 8, CV_32S);
-    cv::Mat constantQuantizationMatrix = cv::Mat(8, 8, CV_32S);
-    cv::Mat lowConstantQuantizationMatrix = cv::Mat(8, 8, CV_32S);
-    cv::Mat highConstantQuantizationMatrix = cv::Mat(8, 8, CV_32S);
+    cv::Mat nonUniformQuantizationMatrix = cv::Mat(8, 8, CV_32F);
+    cv::Mat lowNonUniformQuantizationMatrix = cv::Mat(8, 8, CV_32F);
+    cv::Mat highNonUniformQuantizationMatrix = cv::Mat(8, 8, CV_32F);
+    cv::Mat constantQuantizationMatrix = cv::Mat(8, 8, CV_32F);
+    cv::Mat lowConstantQuantizationMatrix = cv::Mat(8, 8, CV_32F);
+    cv::Mat highConstantQuantizationMatrix = cv::Mat(8, 8, CV_32F);
 
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-            nonUniformQuantizationMatrix.at<int>(i, j) = nonUniformData[i][j];
-            lowNonUniformQuantizationMatrix.at<int>(i, j) = lowNonUniformData[i][j];
-            highNonUniformQuantizationMatrix.at<int>(i, j) = highNonUniformData[i][j];
-            constantQuantizationMatrix.at<int>(i, j) = 32;
-            lowConstantQuantizationMatrix.at<int>(i, j) = 2;
-            highConstantQuantizationMatrix.at<int>(i, j) = 128;
+            nonUniformQuantizationMatrix.at<float>(i, j) = nonUniformData[i][j];
+            lowNonUniformQuantizationMatrix.at<float>(i, j) = lowNonUniformData[i][j];
+            highNonUniformQuantizationMatrix.at<float>(i, j) = highNonUniformData[i][j];
+            constantQuantizationMatrix.at<float>(i, j) = 32;
+            lowConstantQuantizationMatrix.at<float>(i, j) = 2;
+            highConstantQuantizationMatrix.at<float>(i, j) = 128;
         }
     }
 
@@ -331,7 +331,7 @@
     int width = src.size().width / 8;
     int height = src.size().height / 8;
 
-    cv::Mat dest = cv::Mat(height * 8, width * 8, CV_32S);
+    cv::Mat dest = cv::Mat(height * 8, width * 8, CV_32F);
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
@@ -345,7 +345,7 @@
 
             for (int mi = 0; mi < 8; mi++)
                 for (int mj = 0; mj < 8; mj++)
-                    dest.at<int>(i * 8 + mi, j * 8 + mj) = (int)tmpDCTMat.at<float>(mi, mj);
+                    dest.at<float>(i * 8 + mi, j * 8 + mj) = tmpDCTMat.at<float>(mi, mj);
         }
     }
     return dest;
@@ -363,60 +363,45 @@
     int width = src.size().width / 8;
     int height = src.size().height / 8;
 
-    cv::Mat dest = cv::Mat(height * 8, width * 8, CV_8U);
+    cv::Mat dest = cv::Mat(height * 8, width * 8, CV_32F);
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             cv::Mat tmpMat = cv::Mat(8, 8, CV_32F);
-            cv::Mat tmpDCTMat = cv::Mat(8, 8, CV_32F);
+            cv::Mat tmpIDCTMat = cv::Mat(8, 8, CV_32F);
             for (int mi = 0; mi < 8; mi++)
                 for (int mj = 0; mj < 8; mj++)
-                    tmpMat.at<float>(mi, mj) = (float)src.at<int>(i * 8 + mi, j * 8 + mj);
+                    tmpMat.at<float>(mi, mj) = src.at<float>(i * 8 + mi, j * 8 + mj);
 
-            tmpDCTMat = DCT8x8Matrix.t() * tmpMat * DCT8x8Matrix;
+            tmpIDCTMat = DCT8x8Matrix.t() * tmpMat * DCT8x8Matrix;
 
             for (int mi = 0; mi < 8; mi++)
                 for (int mj = 0; mj < 8; mj++)
-                    dest.at<uchar>(i * 8 + mi, j * 8 + mj) = (uchar)tmpDCTMat.at<float>(mi, mj);
+                    dest.at<float>(i * 8 + mi, j * 8 + mj) = tmpIDCTMat.at<float>(mi, mj);
         }
     }
     return dest;
 }
 
 - (void)runInverseDCT {
-    YInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:YInversedQuantizedMatrix[0]].clone());
-    YInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:YInversedQuantizedMatrix[1]].clone());
-    YInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:YInversedQuantizedMatrix[2]].clone());
-    YInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:YInversedQuantizedMatrix[3]].clone());
-    YInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:YInversedQuantizedMatrix[4]].clone());
-    YInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:YInversedQuantizedMatrix[5]].clone());
-
-    CbInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:CbInversedQuantizedMatrix[0]].clone());
-    CbInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:CbInversedQuantizedMatrix[1]].clone());
-    CbInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:CbInversedQuantizedMatrix[2]].clone());
-    CbInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:CbInversedQuantizedMatrix[3]].clone());
-    CbInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:CbInversedQuantizedMatrix[4]].clone());
-    CbInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:CbInversedQuantizedMatrix[5]].clone());
-
-    CrInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:CrInversedQuantizedMatrix[0]].clone());
-    CrInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:CrInversedQuantizedMatrix[1]].clone());
-    CrInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:CrInversedQuantizedMatrix[2]].clone());
-    CrInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:CrInversedQuantizedMatrix[3]].clone());
-    CrInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:CrInversedQuantizedMatrix[4]].clone());
-    CrInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:CrInversedQuantizedMatrix[5]].clone());
+    for (int i = 0; i < 6; i++) {
+        YInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:YInversedQuantizedMatrix[i]].clone());
+        CbInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:CbInversedQuantizedMatrix[i]].clone());
+        CrInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:CrInversedQuantizedMatrix[i]].clone());
+    }
 }
 
 #pragma mark - Quantization
 
-- (cv::Mat)QuantizationWithSource:(const cv::Mat&)src QuantizationMatrix:(const cv::Mat&)matrix {
+- (cv::Mat)QuantizationWithSource:(const cv::Mat&)src QuantizationMatrix:(const cv::Mat&)quantMat {
     int width = src.size().width;
     int height = src.size().height;
 
-    cv::Mat dest = cv::Mat(height, width, CV_32S);
-    cv::Mat tmpMat = cv::Mat(height, width, CV_32S);
+    cv::Mat dest = cv::Mat(height, width, CV_32F);
+    cv::Mat tmpMat = cv::Mat(height, width, CV_32F);
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            tmpMat.at<int>(i, j) = matrix.at<int>(i % 8, j % 8);
+            tmpMat.at<float>(i, j) = quantMat.at<float>(i % 8, j % 8);
         }
     }
     cv::divide(src, tmpMat, dest);
@@ -424,26 +409,11 @@
 }
 
 - (void)runQuantization {
-    YQuantizedMatrix.push_back([self QuantizationWithSource:YDCTMatrix QuantizationMatrix:quantizationMatrix[0]].clone());
-    YQuantizedMatrix.push_back([self QuantizationWithSource:YDCTMatrix QuantizationMatrix:quantizationMatrix[1]].clone());
-    YQuantizedMatrix.push_back([self QuantizationWithSource:YDCTMatrix QuantizationMatrix:quantizationMatrix[2]].clone());
-    YQuantizedMatrix.push_back([self QuantizationWithSource:YDCTMatrix QuantizationMatrix:quantizationMatrix[3]].clone());
-    YQuantizedMatrix.push_back([self QuantizationWithSource:YDCTMatrix QuantizationMatrix:quantizationMatrix[4]].clone());
-    YQuantizedMatrix.push_back([self QuantizationWithSource:YDCTMatrix QuantizationMatrix:quantizationMatrix[5]].clone());
-
-    CbQuantizedMatrix.push_back([self QuantizationWithSource:CbDCTMatrix QuantizationMatrix:quantizationMatrix[0]].clone());
-    CbQuantizedMatrix.push_back([self QuantizationWithSource:CbDCTMatrix QuantizationMatrix:quantizationMatrix[1]].clone());
-    CbQuantizedMatrix.push_back([self QuantizationWithSource:CbDCTMatrix QuantizationMatrix:quantizationMatrix[2]].clone());
-    CbQuantizedMatrix.push_back([self QuantizationWithSource:CbDCTMatrix QuantizationMatrix:quantizationMatrix[3]].clone());
-    CbQuantizedMatrix.push_back([self QuantizationWithSource:CbDCTMatrix QuantizationMatrix:quantizationMatrix[4]].clone());
-    CbQuantizedMatrix.push_back([self QuantizationWithSource:CbDCTMatrix QuantizationMatrix:quantizationMatrix[5]].clone());
-
-    CrQuantizedMatrix.push_back([self QuantizationWithSource:CrDCTMatrix QuantizationMatrix:quantizationMatrix[0]].clone());
-    CrQuantizedMatrix.push_back([self QuantizationWithSource:CrDCTMatrix QuantizationMatrix:quantizationMatrix[1]].clone());
-    CrQuantizedMatrix.push_back([self QuantizationWithSource:CrDCTMatrix QuantizationMatrix:quantizationMatrix[2]].clone());
-    CrQuantizedMatrix.push_back([self QuantizationWithSource:CrDCTMatrix QuantizationMatrix:quantizationMatrix[3]].clone());
-    CrQuantizedMatrix.push_back([self QuantizationWithSource:CrDCTMatrix QuantizationMatrix:quantizationMatrix[4]].clone());
-    CrQuantizedMatrix.push_back([self QuantizationWithSource:CrDCTMatrix QuantizationMatrix:quantizationMatrix[5]].clone());
+    for (int i = 0; i < 6; i++) {
+        YQuantizedMatrix.push_back([self QuantizationWithSource:YDCTMatrix QuantizationMatrix:quantizationMatrix[i]].clone());
+        CbQuantizedMatrix.push_back([self QuantizationWithSource:CbDCTMatrix QuantizationMatrix:quantizationMatrix[i]].clone());
+        CrQuantizedMatrix.push_back([self QuantizationWithSource:CrDCTMatrix QuantizationMatrix:quantizationMatrix[i]].clone());
+    }
 }
 
 #pragma mark - Inverse Quantization
@@ -452,11 +422,11 @@
     int width = src.size().width;
     int height = src.size().height;
 
-    cv::Mat dest = cv::Mat(height, width, CV_32S);
-    cv::Mat tmpMat = cv::Mat(height, width, CV_32S);
+    cv::Mat dest = cv::Mat(height, width, CV_32F);
+    cv::Mat tmpMat = cv::Mat(height, width, CV_32F);
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            tmpMat.at<int>(i, j) = matrix.at<int>(i % 8, j % 8);
+            tmpMat.at<float>(i, j) = matrix.at<float>(i % 8, j % 8);
         }
     }
     dest = src.mul(tmpMat);
@@ -464,54 +434,20 @@
 }
 
 - (void)runInverseQuantization {
-    YInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:YQuantizedMatrix[0]
-                                                        QuantizationMatrix:quantizationMatrix[0]].clone());
-    YInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:YQuantizedMatrix[1]
-                                                        QuantizationMatrix:quantizationMatrix[1]].clone());
-    YInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:YQuantizedMatrix[2]
-                                                        QuantizationMatrix:quantizationMatrix[2]].clone());
-    YInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:YQuantizedMatrix[3]
-                                                        QuantizationMatrix:quantizationMatrix[3]].clone());
-    YInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:YQuantizedMatrix[4]
-                                                        QuantizationMatrix:quantizationMatrix[4]].clone());
-    YInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:YQuantizedMatrix[5]
-                                                        QuantizationMatrix:quantizationMatrix[5]].clone());
-
-    CbInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:CbQuantizedMatrix[0]
-                                                         QuantizationMatrix:quantizationMatrix[0]].clone());
-    CbInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:CbQuantizedMatrix[1]
-                                                         QuantizationMatrix:quantizationMatrix[1]].clone());
-    CbInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:CbQuantizedMatrix[2]
-                                                         QuantizationMatrix:quantizationMatrix[2]].clone());
-    CbInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:CbQuantizedMatrix[3]
-                                                         QuantizationMatrix:quantizationMatrix[3]].clone());
-    CbInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:CbQuantizedMatrix[4]
-                                                         QuantizationMatrix:quantizationMatrix[4]].clone());
-    CbInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:CbQuantizedMatrix[5]
-                                                         QuantizationMatrix:quantizationMatrix[5]].clone());
-
-    CrInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:CrQuantizedMatrix[0]
-                                                         QuantizationMatrix:quantizationMatrix[0]].clone());
-    CrInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:CrQuantizedMatrix[1]
-                                                         QuantizationMatrix:quantizationMatrix[1]].clone());
-    CrInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:CrQuantizedMatrix[2]
-                                                         QuantizationMatrix:quantizationMatrix[2]].clone());
-    CrInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:CrQuantizedMatrix[3]
-                                                         QuantizationMatrix:quantizationMatrix[3]].clone());
-    CrInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:CrQuantizedMatrix[4]
-                                                         QuantizationMatrix:quantizationMatrix[4]].clone());
-    CrInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:CrQuantizedMatrix[5]
-                                                         QuantizationMatrix:quantizationMatrix[5]].clone());
+    for (int i = 0; i < 6; i++) {
+        YInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:YQuantizedMatrix[i]
+                                                            QuantizationMatrix:quantizationMatrix[i]].clone());
+        CbInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:CbQuantizedMatrix[i]
+                                                             QuantizationMatrix:quantizationMatrix[i]].clone());
+        CrInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:CrQuantizedMatrix[i]
+                                                             QuantizationMatrix:quantizationMatrix[i]].clone());
+    }
 }
 
 #pragma mark - Generate Final Image
 
 - (cv::Mat)getFinalImage {
     std::vector<cv::Mat> RGBChannels;
-    RGBChannels.push_back(YInversedDCTMatrix[self.quantizationMatrixChoosedNumber].clone());
-    RGBChannels.push_back(YInversedDCTMatrix[self.quantizationMatrixChoosedNumber].clone());
-    RGBChannels.push_back(YInversedDCTMatrix[self.quantizationMatrixChoosedNumber].clone());
-
     cv::Size size = YInversedDCTMatrix[self.quantizationMatrixChoosedNumber].size();
     int imageWidth = size.width;
     int imageHeight = size.height;
@@ -519,15 +455,22 @@
     int scaleCrHeight = imageHeight / CrInversedDCTMatrix[self.quantizationMatrixChoosedNumber].size().height;
     int scaleCbWidth = imageWidth / CbInversedDCTMatrix[self.quantizationMatrixChoosedNumber].size().width;
     int scaleCrWidth = imageWidth / CrInversedDCTMatrix[self.quantizationMatrixChoosedNumber].size().width;
+    cv::Mat tmpMat = cv::Mat(imageHeight, imageWidth, CV_8U);
+    RGBChannels.push_back(tmpMat.clone());
+    RGBChannels.push_back(tmpMat.clone());
+    RGBChannels.push_back(tmpMat.clone());
 
     for (int i = 0; i < imageHeight; i++) {
         for (int j = 0; j < imageWidth; j++) {
-            float Y = (float)YInversedDCTMatrix[self.quantizationMatrixChoosedNumber].at<uchar>(i, j);
-            float Cb = (float)CbInversedDCTMatrix[self.quantizationMatrixChoosedNumber].at<uchar>(i / scaleCbHeight, j / scaleCbWidth);
-            float Cr = (float)CrInversedDCTMatrix[self.quantizationMatrixChoosedNumber].at<uchar>(i / scaleCrHeight, j / scaleCrWidth);
-            RGBChannels[0].at<uchar>(i, j) = (uchar)GET_R_FROM_YCbCr;
-            RGBChannels[1].at<uchar>(i, j) = (uchar)GET_G_FROM_YCbCr;
-            RGBChannels[2].at<uchar>(i, j) = (uchar)GET_B_FROM_YCbCr;
+            float Y = YInversedDCTMatrix[self.quantizationMatrixChoosedNumber].at<float>(i, j);
+            float Cb = CbInversedDCTMatrix[self.quantizationMatrixChoosedNumber].at<float>(i / scaleCbHeight, j / scaleCbWidth);
+            float Cr = CrInversedDCTMatrix[self.quantizationMatrixChoosedNumber].at<float>(i / scaleCrHeight, j / scaleCrWidth);
+            float R = GET_R_FROM_YCbCr;
+            float G = GET_G_FROM_YCbCr;
+            float B = GET_B_FROM_YCbCr;
+            RGBChannels[0].at<uchar>(i, j) = (R > 255? 255: R < 0? 0 :(uchar)R);
+            RGBChannels[1].at<uchar>(i, j) = (G > 255? 255: G < 0? 0 :(uchar)G);
+            RGBChannels[2].at<uchar>(i, j) = (B > 255? 255: B < 0? 0 :(uchar)B);
         }
     }
 
@@ -624,10 +567,10 @@
         int yPosition = (int)((touchPoint.y - rect.origin.y) / rect.size.height * (self.channelYImageView.image.size.height / 8));
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                DCTBlock.at<int>(i, j) = YDCTMatrix.at<int>(yPosition * 8 + i, xPosition * 8 + j);
+                DCTBlock.at<float>(i, j) = YDCTMatrix.at<float>(yPosition * 8 + i, xPosition * 8 + j);
                 if (self.quantizationMatrixChoosedNumber != -1) {
-                    quantizedBlock.at<int>(i, j) =
-                    YQuantizedMatrix[self.quantizationMatrixChoosedNumber].at<int>(yPosition * 8 + i, xPosition * 8 + j);
+                    quantizedBlock.at<float>(i, j) =
+                    YQuantizedMatrix[self.quantizationMatrixChoosedNumber].at<float>(yPosition * 8 + i, xPosition * 8 + j);
                 }
             }
         }
@@ -650,10 +593,10 @@
         int yPosition = (int)((touchPoint.y - rect.origin.y) / rect.size.height * (self.channelCbImageView.image.size.height / 8));
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                DCTBlock.at<int>(i, j) = CbDCTMatrix.at<int>(yPosition * 8 + i, xPosition * 8 + j);
+                DCTBlock.at<float>(i, j) = CbDCTMatrix.at<float>(yPosition * 8 + i, xPosition * 8 + j);
                 if (self.quantizationMatrixChoosedNumber != -1) {
-                    quantizedBlock.at<int>(i, j) =
-                    CbQuantizedMatrix[self.quantizationMatrixChoosedNumber].at<int>(yPosition * 8 + i, xPosition * 8 + j);
+                    quantizedBlock.at<float>(i, j) =
+                    CbQuantizedMatrix[self.quantizationMatrixChoosedNumber].at<float>(yPosition * 8 + i, xPosition * 8 + j);
                 }
             }
         }
@@ -676,10 +619,10 @@
         int yPosition = (int)((touchPoint.y - rect.origin.y) / rect.size.height * (self.channelCrImageView.image.size.height / 8));
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                DCTBlock.at<int>(i, j) = CrDCTMatrix.at<int>(yPosition * 8 + i, xPosition * 8 + j);
+                DCTBlock.at<float>(i, j) = CrDCTMatrix.at<float>(yPosition * 8 + i, xPosition * 8 + j);
                 if (self.quantizationMatrixChoosedNumber != -1) {
-                    quantizedBlock.at<int>(i, j) =
-                    CrQuantizedMatrix[self.quantizationMatrixChoosedNumber].at<int>(yPosition * 8 + i, xPosition * 8 + j);
+                    quantizedBlock.at<float>(i, j) =
+                    CrQuantizedMatrix[self.quantizationMatrixChoosedNumber].at<float>(yPosition * 8 + i, xPosition * 8 + j);
                 }
             }
         }
@@ -747,7 +690,7 @@
         if (self.isTouchedImageView) {
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
-                    quantizedBlock.at<int>(i, j) = DCTBlock.at<int>(i, j) / quantizationMatrixBlock.at<int>(i, j);
+                    quantizedBlock.at<float>(i, j) = DCTBlock.at<float>(i, j) / quantizationMatrixBlock.at<float>(i, j);
                 }
             }
         }
@@ -783,13 +726,13 @@
     if (self.isTouchedImageView) {
         if (collectionView.tag == 1) {
             [numberLabel setText:[[NSString alloc] initWithFormat:@"%d",
-                                  DCTBlock.at<int>((int)indexPath.item / 8, (int)indexPath.item % 8)]];
+                                  (int)DCTBlock.at<float>((int)indexPath.item / 8, (int)indexPath.item % 8)]];
         } else if (collectionView.tag == 2 && self.quantizationMatrixChoosedNumber != -1) {
             [numberLabel setText:[[NSString alloc] initWithFormat:@"%d",
-                                  quantizedBlock.at<int>((int)indexPath.item / 8, (int)indexPath.item % 8)]];
+                                  (int)quantizedBlock.at<float>((int)indexPath.item / 8, (int)indexPath.item % 8)]];
         } else if (collectionView.tag == 3 && self.quantizationMatrixChoosedNumber != -1) {
             [numberLabel setText:[[NSString alloc] initWithFormat:@"%d",
-                                  quantizationMatrixBlock.at<int>((int)indexPath.item / 8, (int)indexPath.item % 8)]];
+                                  (int)quantizationMatrixBlock.at<float>((int)indexPath.item / 8, (int)indexPath.item % 8)]];
         }
     }
     for (UIView *subview in [cell subviews]) {
