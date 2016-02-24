@@ -59,6 +59,8 @@
     self.quantizationMatrixPickerView.delegate = self;
     self.quantizationMatrixPickerView.dataSource = self;
     self.quantizationMatrixPickerView.backgroundColor = [UIColor whiteColor];
+    self.quantizationMatrixPickerView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    self.quantizationMatrixPickerView.layer.borderWidth = 1;
 
     self.quantizationMatrixPickerData = [[NSArray alloc] initWithObjects:@"non-uniform quantization", @"low non-uniform quantization", @"high non-uniform quantization", @"constant quantization", @"low constant quantization", @"high constant quantization", nil];
 

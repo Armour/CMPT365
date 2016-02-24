@@ -43,7 +43,7 @@
 @property (strong, nonatomic) NSArray *subsamplingPickerData;
 @property (nonatomic) CGPoint originalSubsamplingPickerViewCenterPoint;
 
-- (void)RGBtoYUV;
+- (void)RGBtoYCbCr;
 - (void)subsampling444;
 - (void)subsampling422;
 - (void)subsampling411;
@@ -77,6 +77,8 @@
     self.chromaSubsamplingPickerView.delegate = self;
     self.chromaSubsamplingPickerView.dataSource = self;
     self.chromaSubsamplingPickerView.backgroundColor = [UIColor whiteColor];
+    self.chromaSubsamplingPickerView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    self.chromaSubsamplingPickerView.layer.borderWidth = 1;
 
     self.subsamplingPickerData = [[NSArray alloc] initWithObjects:@DEFAULT_PICKERVIEW_OPTION, @"4:4:4", @"4:2:2", @"4:2:0", @"4:1:1", nil];
 
@@ -98,7 +100,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self RGBtoYUV];
+    [self RGBtoYCbCr];
     [self initImageView];
     [self initPickerView];
     [self updateImageSizeLabel];
@@ -109,15 +111,15 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - RGB To YUV
+#pragma mark - RGB To YCbCr
 
-- (void)RGBtoYUV {
+- (void)RGBtoYCbCr {                          // Convert RGB to YCbCr
     std::vector<cv::Mat> RGBChannels;
-    std::vector<cv::Mat> YUVChannels;
+    std::vector<cv::Mat> YCbCrChannels;
     self.RGBImage = [MatConvert cvMatFromUIImage:self.originalImage];
 
     cv::split(self.RGBImage, RGBChannels);
-    cv::split(self.RGBImage, YUVChannels);
+    cv::split(self.RGBImage, YCbCrChannels);
 
     cv::Size size = self.RGBImage.size();
     int imageWidth = size.width;
@@ -128,25 +130,25 @@
             float R = (float)RGBChannels[0].at<uchar>(i, j);
             float G = (float)RGBChannels[1].at<uchar>(i, j);
             float B = (float)RGBChannels[2].at<uchar>(i, j);
-            YUVChannels[0].at<uchar>(i, j) = (uchar)GET_Y_FROM_RGB;
-            YUVChannels[1].at<uchar>(i, j) = (uchar)GET_Cb_FROM_RGB;
-            YUVChannels[2].at<uchar>(i, j) = (uchar)GET_Cr_FROM_RGB;
+            YCbCrChannels[0].at<uchar>(i, j) = (uchar)GET_Y_FROM_RGB;
+            YCbCrChannels[1].at<uchar>(i, j) = (uchar)GET_Cb_FROM_RGB;
+            YCbCrChannels[2].at<uchar>(i, j) = (uchar)GET_Cr_FROM_RGB;
         }
     }
 
-    self.YImage = YUVChannels[0];
-    self.CbImage444 = YUVChannels[1];
-    self.CrImage444 = YUVChannels[2];
+    self.YImage = YCbCrChannels[0];
+    self.CbImage444 = YCbCrChannels[1];
+    self.CrImage444 = YCbCrChannels[2];
 }
 
 #pragma mark - Subsampling Implementation
 
-- (void)subsampling444 {
+- (void)subsampling444 {                // Subsampling 4:4:4
     [self.channelCbImageView setImage:[MatConvert UIImageFromCVMat:self.CbImage444]];
     [self.channelCrImageView setImage:[MatConvert UIImageFromCVMat:self.CrImage444]];
 }
 
-- (void)subsampling422 {
+- (void)subsampling422 {                // Subsampling 4:2:2
     cv::Size size = self.CbImage444.size();
     int imageWidth = size.width;
     int imageHeight = size.height;
@@ -165,7 +167,7 @@
     [self.channelCrImageView setImage:[MatConvert UIImageFromCVMat:self.CrImage422]];
 }
 
-- (void)subsampling411 {
+- (void)subsampling411 {                // Subsampling 4:1:1
     cv::Size size = self.CbImage444.size();
     int imageWidth = size.width;
     int imageHeight = size.height;
@@ -184,7 +186,7 @@
     [self.channelCrImageView setImage:[MatConvert UIImageFromCVMat:self.CrImage411]];
 }
 
-- (void)subsampling420 {
+- (void)subsampling420 {                // Subsampling 4:2:0
     cv::Size size = self.CbImage444.size();
     int imageWidth = size.width;
     int imageHeight = size.height;
@@ -205,7 +207,7 @@
 
 #pragma mark - Button Click Event
 
-- (IBAction)chooseSubsampling:(UIBarButtonItem *)sender {
+- (IBAction)chooseSubsampling:(UIBarButtonItem *)sender {       // Choose Subsampling Algorithm
     if (!self.isChoosingSubsamplingMethod) {
         self.isChoosingSubsamplingMethod = true;
         self.chromaSubsamplingPickerViewTopConstraint.constant -= [self.chromaSubsamplingPickerView frame].size.height;

@@ -73,7 +73,7 @@
 
 #pragma mark - Button Event
 
-- (IBAction)addImage:(UIBarButtonItem *)sender {
+- (IBAction)addImage:(UIBarButtonItem *)sender {            // Add image from photo album
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
         self.imagePickerController.sourceType =  UIImagePickerControllerSourceTypePhotoLibrary;
         self.imagePickerController.mediaTypes = @[(NSString *)kUTTypeImage];
@@ -84,7 +84,7 @@
     }
 }
 
-- (IBAction)takePhoto:(UIBarButtonItem *)sender {
+- (IBAction)takePhoto:(UIBarButtonItem *)sender {           // Take photo as image
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         self.imagePickerController.sourceType =  UIImagePickerControllerSourceTypeCamera;
         self.imagePickerController.mediaTypes = @[(NSString *)kUTTypeImage];
@@ -95,7 +95,7 @@
     }
 }
 
-- (IBAction)beginCompression:(UIBarButtonItem *)sender {
+- (IBAction)beginCompression:(UIBarButtonItem *)sender {            // Begin RGB to YCbCr
     if ([self.mainPageImageView image] != NULL) {
         [self performSegueWithIdentifier:@"segueToChangeColor" sender:self];
     } else {

@@ -9,9 +9,12 @@
 #import <UIKit/UIKit.h>
 #import <opencv2/opencv.hpp>
 
-@interface FinalResultViewController : UIViewController
+@interface FinalResultViewController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource> {
+  @public
+    std::vector<cv::Mat> finalImage;
+}
 
 @property (nonatomic) cv::Mat originalImage;
-@property (nonatomic) cv::Mat finalImage;
+@property (nonatomic) NSInteger quantizationMatrixChoosedNumber;
 
 @end

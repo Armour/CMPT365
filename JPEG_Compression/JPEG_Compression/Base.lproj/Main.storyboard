@@ -157,13 +157,12 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="120-aK-t4V">
-                                <rect key="frame" x="0.0" y="64" width="600" height="264"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="238"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="412-yG-kln">
-                                <rect key="frame" x="520" y="288" width="80" height="40"/>
+                                <rect key="frame" x="520" y="262" width="80" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="80" id="1Sk-kZ-obd"/>
-                                    <constraint firstAttribute="width" secondItem="412-yG-kln" secondAttribute="height" multiplier="1:1" id="9vc-ea-D0b"/>
                                 </constraints>
                                 <attributedString key="attributedText">
                                     <fragment content="Original">
@@ -175,20 +174,29 @@
                                     </fragment>
                                 </attributedString>
                                 <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="9vc-ea-D0b"/>
-                                    </mask>
-                                </variation>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aN0-4E-aGW">
-                                <rect key="frame" x="0.0" y="336" width="600" height="264"/>
+                                <rect key="frame" x="0.0" y="310" width="600" height="238"/>
                             </imageView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mud-vX-Yei">
+                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="0jx-Iu-2a9"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="aWj-Z4-Wxw"/>
+                                    <barButtonItem title="Choose quantization matrix" id="Pbe-zB-lkf">
+                                        <connections>
+                                            <action selector="chooseQuantizationMatrix:" destination="EzA-b6-ll0" id="1Qr-4N-t0I"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="yeA-kw-jVe"/>
+                                </items>
+                            </toolbar>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Xsq-Nr-f3u">
-                                <rect key="frame" x="520" y="560" width="80" height="40"/>
+                                <rect key="frame" x="520" y="508" width="80" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="80" id="Gen-xW-EfD"/>
-                                    <constraint firstAttribute="width" secondItem="Xsq-Nr-f3u" secondAttribute="height" multiplier="1:1" id="tax-Xp-x76"/>
                                 </constraints>
                                 <attributedString key="attributedText">
                                     <fragment content="Final">
@@ -200,30 +208,37 @@
                                     </fragment>
                                 </attributedString>
                                 <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="tax-Xp-x76"/>
-                                    </mask>
-                                </variation>
                             </label>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tNe-jV-cC8">
+                                <rect key="frame" x="0.0" y="600" width="600" height="216"/>
+                            </pickerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="Mud-vX-Yei" firstAttribute="leading" secondItem="aN0-4E-aGW" secondAttribute="leading" id="1Ln-7J-Abf"/>
+                            <constraint firstItem="Mud-vX-Yei" firstAttribute="trailing" secondItem="Xsq-Nr-f3u" secondAttribute="trailing" id="4Yz-EN-TJm"/>
                             <constraint firstItem="412-yG-kln" firstAttribute="trailing" secondItem="120-aK-t4V" secondAttribute="trailing" id="6cV-6y-EXU"/>
                             <constraint firstItem="412-yG-kln" firstAttribute="bottom" secondItem="120-aK-t4V" secondAttribute="bottom" id="9m4-yU-iGv"/>
                             <constraint firstItem="Xsq-Nr-f3u" firstAttribute="width" secondItem="Xsq-Nr-f3u" secondAttribute="height" multiplier="2:1" id="Ce6-tQ-J4n"/>
+                            <constraint firstItem="Xsq-Nr-f3u" firstAttribute="bottom" secondItem="aN0-4E-aGW" secondAttribute="bottom" id="G50-0P-PfR"/>
+                            <constraint firstItem="tNe-jV-cC8" firstAttribute="top" secondItem="Mud-vX-Yei" secondAttribute="bottom" id="Gb3-eW-Aor"/>
                             <constraint firstItem="120-aK-t4V" firstAttribute="top" secondItem="JfT-je-AgQ" secondAttribute="bottom" id="Geh-I5-BZr"/>
-                            <constraint firstItem="aN0-4E-aGW" firstAttribute="bottom" secondItem="Zsn-WV-y7W" secondAttribute="top" id="NdS-qE-KcN"/>
                             <constraint firstItem="aN0-4E-aGW" firstAttribute="leading" secondItem="120-aK-t4V" secondAttribute="leading" id="PoI-gy-8xH"/>
+                            <constraint firstItem="Zsn-WV-y7W" firstAttribute="top" secondItem="Mud-vX-Yei" secondAttribute="bottom" id="PtY-dh-gjk"/>
                             <constraint firstItem="Xsq-Nr-f3u" firstAttribute="trailing" secondItem="aN0-4E-aGW" secondAttribute="trailing" id="QMS-WS-bQn"/>
                             <constraint firstAttribute="trailing" secondItem="aN0-4E-aGW" secondAttribute="trailing" id="QTK-4a-fHR"/>
                             <constraint firstItem="aN0-4E-aGW" firstAttribute="leading" secondItem="Fcu-m6-uIo" secondAttribute="leading" id="TB1-9a-6YA"/>
+                            <constraint firstItem="tNe-jV-cC8" firstAttribute="leading" secondItem="Mud-vX-Yei" secondAttribute="leading" id="Tmr-3u-8ZO"/>
                             <constraint firstItem="aN0-4E-aGW" firstAttribute="top" secondItem="120-aK-t4V" secondAttribute="bottom" constant="8" id="UTY-fP-lfD"/>
+                            <constraint firstItem="tNe-jV-cC8" firstAttribute="trailing" secondItem="Mud-vX-Yei" secondAttribute="trailing" id="XOH-gS-pQh"/>
                             <constraint firstItem="120-aK-t4V" firstAttribute="height" secondItem="aN0-4E-aGW" secondAttribute="height" id="amY-mZ-MvE"/>
-                            <constraint firstItem="Xsq-Nr-f3u" firstAttribute="bottom" secondItem="aN0-4E-aGW" secondAttribute="bottom" id="oAi-UN-MPR"/>
+                            <constraint firstItem="tNe-jV-cC8" firstAttribute="top" secondItem="aN0-4E-aGW" secondAttribute="bottom" constant="52" id="cnN-bg-3Hh"/>
                             <constraint firstItem="aN0-4E-aGW" firstAttribute="trailing" secondItem="412-yG-kln" secondAttribute="trailing" id="rTG-nl-UXw"/>
                             <constraint firstItem="412-yG-kln" firstAttribute="width" secondItem="412-yG-kln" secondAttribute="height" multiplier="2:1" id="uz6-eJ-Scp"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="kk7-Xj-vBH" appends="YES" id="fyC-r8-3f8"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" title="Final Result" id="6t4-4D-vVN">
                         <barButtonItem key="backBarButtonItem" title=" Back" id="0VH-qV-1IB"/>
@@ -234,11 +249,21 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="chooseQuantizationMatrixButton" destination="Pbe-zB-lkf" id="72o-PR-Etb"/>
                         <outlet property="finalImageView" destination="aN0-4E-aGW" id="MU4-n3-LTw"/>
                         <outlet property="originalImageView" destination="120-aK-t4V" id="2Co-jv-rUt"/>
+                        <outlet property="quantizationMatrixPickerTopImageViewConstraint" destination="cnN-bg-3Hh" id="khF-35-dkd"/>
+                        <outlet property="quantizationMatrixPickerTopToolBarConstraint" destination="Gb3-eW-Aor" id="Krb-vv-Mt4"/>
+                        <outlet property="quantizationMatrixPickerView" destination="tNe-jV-cC8" id="I5V-tf-DPu"/>
+                        <outlet property="toolBar" destination="Mud-vX-Yei" id="gyY-iT-tdg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PYS-T1-cTg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="kk7-Xj-vBH">
+                    <connections>
+                        <action selector="TapGestureEvent:" destination="EzA-b6-ll0" id="aFt-sN-SBc"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3111" y="377"/>
         </scene>
@@ -259,10 +284,6 @@
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="fYy-Zh-G0U">
                                 <rect key="frame" x="0.0" y="518" width="248" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="120" id="VBE-VP-1cu"/>
-                                    <constraint firstAttribute="width" secondItem="fYy-Zh-G0U" secondAttribute="height" multiplier="3:1" id="diU-Me-e24"/>
-                                </constraints>
                                 <attributedString key="attributedText">
                                     <fragment content="  W: H:">
                                         <attributes>
@@ -273,22 +294,12 @@
                                     </fragment>
                                 </attributedString>
                                 <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="VBE-VP-1cu"/>
-                                        <exclude reference="diU-Me-e24"/>
-                                    </mask>
-                                </variation>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fmg-1l-oQk">
                                 <rect key="frame" x="304" y="368" width="296" height="180"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="JsE-eh-PGK">
                                 <rect key="frame" x="304" y="518" width="248" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="120" id="AgP-aG-D0G"/>
-                                    <constraint firstAttribute="width" secondItem="JsE-eh-PGK" secondAttribute="height" multiplier="3:1" id="tgQ-hO-NYJ"/>
-                                </constraints>
                                 <attributedString key="attributedText">
                                     <fragment content="  W: H:">
                                         <attributes>
@@ -299,12 +310,6 @@
                                     </fragment>
                                 </attributedString>
                                 <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="AgP-aG-D0G"/>
-                                        <exclude reference="tgQ-hO-NYJ"/>
-                                    </mask>
-                                </variation>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Lln-0g-XFC">
                                 <rect key="frame" x="0.0" y="64" width="600" height="296"/>
@@ -362,10 +367,6 @@
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="foq-7B-p8x">
                                 <rect key="frame" x="0.0" y="320" width="552" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="120" id="EEH-pa-U1H"/>
-                                    <constraint firstAttribute="width" secondItem="foq-7B-p8x" secondAttribute="height" multiplier="3:1" id="aDE-ux-5JX"/>
-                                </constraints>
                                 <attributedString key="attributedText">
                                     <fragment content="  W: H:">
                                         <attributes>
@@ -376,12 +377,6 @@
                                     </fragment>
                                 </attributedString>
                                 <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="EEH-pa-U1H"/>
-                                        <exclude reference="aDE-ux-5JX"/>
-                                    </mask>
-                                </variation>
                             </label>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O3G-ez-Ja3">
                                 <rect key="frame" x="0.0" y="556" width="600" height="44"/>
@@ -487,10 +482,6 @@
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="hm0-eN-wvo">
                                 <rect key="frame" x="0.0" y="518" width="248" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="hm0-eN-wvo" secondAttribute="height" multiplier="3:1" id="3ZO-GQ-fWI"/>
-                                    <constraint firstAttribute="width" constant="120" id="sBy-f0-ha9"/>
-                                </constraints>
                                 <attributedString key="attributedText">
                                     <fragment content="  W: H:">
                                         <attributes>
@@ -501,22 +492,12 @@
                                     </fragment>
                                 </attributedString>
                                 <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="3ZO-GQ-fWI"/>
-                                        <exclude reference="sBy-f0-ha9"/>
-                                    </mask>
-                                </variation>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Z7X-NN-BSd">
                                 <rect key="frame" x="304" y="368" width="296" height="180"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="z7K-Ep-r7A">
                                 <rect key="frame" x="304" y="518" width="248" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="z7K-Ep-r7A" secondAttribute="height" multiplier="3:1" id="Mqy-NA-dDG"/>
-                                    <constraint firstAttribute="width" constant="120" id="s7Y-Lc-ozJ"/>
-                                </constraints>
                                 <attributedString key="attributedText">
                                     <fragment content="  W: H:">
                                         <attributes>
@@ -527,12 +508,6 @@
                                     </fragment>
                                 </attributedString>
                                 <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="Mqy-NA-dDG"/>
-                                        <exclude reference="s7Y-Lc-ozJ"/>
-                                    </mask>
-                                </variation>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GVD-mi-c2r">
                                 <rect key="frame" x="0.0" y="64" width="600" height="296"/>
@@ -590,10 +565,6 @@
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="5gV-f3-Ba1">
                                 <rect key="frame" x="0.0" y="320" width="552" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="120" id="70U-Wn-1rC"/>
-                                    <constraint firstAttribute="width" secondItem="5gV-f3-Ba1" secondAttribute="height" multiplier="3:1" id="t1H-NX-kJk"/>
-                                </constraints>
                                 <attributedString key="attributedText">
                                     <fragment content="  W: H:">
                                         <attributes>
@@ -604,12 +575,6 @@
                                     </fragment>
                                 </attributedString>
                                 <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="70U-Wn-1rC"/>
-                                        <exclude reference="t1H-NX-kJk"/>
-                                    </mask>
-                                </variation>
                             </label>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qrc-GL-xkP">
                                 <rect key="frame" x="0.0" y="556" width="600" height="44"/>
@@ -718,10 +683,6 @@
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="c5o-qJ-tbA">
                                 <rect key="frame" x="0.0" y="518" width="248" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="120" id="3Ta-iU-dcQ"/>
-                                    <constraint firstAttribute="width" secondItem="c5o-qJ-tbA" secondAttribute="height" multiplier="3:1" id="dAQ-2f-xe5"/>
-                                </constraints>
                                 <attributedString key="attributedText">
                                     <fragment content="  W: H:">
                                         <attributes>
@@ -732,22 +693,12 @@
                                     </fragment>
                                 </attributedString>
                                 <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="3Ta-iU-dcQ"/>
-                                        <exclude reference="dAQ-2f-xe5"/>
-                                    </mask>
-                                </variation>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3Qv-wt-Iah">
                                 <rect key="frame" x="304" y="368" width="296" height="180"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="2nI-5S-pnI">
                                 <rect key="frame" x="304" y="518" width="248" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="2nI-5S-pnI" secondAttribute="height" multiplier="3:1" id="Aj2-IQ-s31"/>
-                                    <constraint firstAttribute="width" constant="120" id="maa-ED-nEh"/>
-                                </constraints>
                                 <attributedString key="attributedText">
                                     <fragment content="  W: H:">
                                         <attributes>
@@ -758,12 +709,6 @@
                                     </fragment>
                                 </attributedString>
                                 <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="Aj2-IQ-s31"/>
-                                        <exclude reference="maa-ED-nEh"/>
-                                    </mask>
-                                </variation>
                             </label>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sDm-pj-PuC">
                                 <rect key="frame" x="0.0" y="556" width="600" height="44"/>
@@ -834,15 +779,8 @@
                                 </attributedString>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ETd-Cr-9WB">
-                                <rect key="frame" x="0.0" y="600" width="600" height="216"/>
-                            </pickerView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="5Xc-NX-Tgh">
                                 <rect key="frame" x="0.0" y="320" width="552" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="5Xc-NX-Tgh" secondAttribute="height" multiplier="3:1" id="ljB-qv-o2W"/>
-                                    <constraint firstAttribute="width" constant="120" id="u5m-10-wTn"/>
-                                </constraints>
                                 <attributedString key="attributedText">
                                     <fragment content="  W: H:">
                                         <attributes>
@@ -853,13 +791,10 @@
                                     </fragment>
                                 </attributedString>
                                 <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="ljB-qv-o2W"/>
-                                        <exclude reference="u5m-10-wTn"/>
-                                    </mask>
-                                </variation>
                             </label>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ETd-Cr-9WB">
+                                <rect key="frame" x="0.0" y="600" width="600" height="216"/>
+                            </pickerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -876,14 +811,9 @@
                             <constraint firstItem="DgI-wn-GTZ" firstAttribute="leading" secondItem="aXf-nc-LbO" secondAttribute="leading" id="E9U-fT-dXm"/>
                             <constraint firstItem="3Qv-wt-Iah" firstAttribute="leading" secondItem="aXf-nc-LbO" secondAttribute="trailing" constant="8" id="FLT-6R-ObH"/>
                             <constraint firstItem="c5o-qJ-tbA" firstAttribute="bottom" secondItem="aXf-nc-LbO" secondAttribute="bottom" id="Fk6-xB-IVB"/>
-                            <constraint firstItem="c5o-qJ-tbA" firstAttribute="width" secondItem="c5o-qJ-tbA" secondAttribute="height" multiplier="1:1" id="GhO-gl-tbe"/>
-                            <constraint firstItem="4bJ-mH-4Nq" firstAttribute="width" secondItem="4bJ-mH-4Nq" secondAttribute="height" multiplier="1:1" id="HoG-PB-AAD"/>
-                            <constraint firstItem="DgI-wn-GTZ" firstAttribute="top" secondItem="A20-Pw-kRg" secondAttribute="top" constant="64" id="I0a-jT-NVI"/>
-                            <constraint firstItem="c5o-qJ-tbA" firstAttribute="width" secondItem="c5o-qJ-tbA" secondAttribute="height" multiplier="1:1" id="KKW-BE-Qvb"/>
                             <constraint firstItem="sDm-pj-PuC" firstAttribute="leading" secondItem="aXf-nc-LbO" secondAttribute="leading" id="LoU-EJ-IVW"/>
                             <constraint firstItem="sDm-pj-PuC" firstAttribute="top" secondItem="3Qv-wt-Iah" secondAttribute="bottom" constant="8" id="Obf-QH-ea3"/>
                             <constraint firstItem="2nI-5S-pnI" firstAttribute="height" secondItem="4bJ-mH-4Nq" secondAttribute="height" id="PCC-kZ-sp2"/>
-                            <constraint firstItem="1S8-MV-e72" firstAttribute="width" secondItem="1S8-MV-e72" secondAttribute="height" multiplier="1:1" id="Pe7-P0-djQ"/>
                             <constraint firstItem="2nI-5S-pnI" firstAttribute="bottom" secondItem="3Qv-wt-Iah" secondAttribute="bottom" id="SIe-6u-HRK"/>
                             <constraint firstItem="sDm-pj-PuC" firstAttribute="bottom" secondItem="dja-wa-99g" secondAttribute="top" id="VOC-vI-wyn"/>
                             <constraint firstItem="3Qv-wt-Iah" firstAttribute="height" secondItem="DgI-wn-GTZ" secondAttribute="height" multiplier="0.5" constant="32" id="W1f-2k-BN9"/>
@@ -905,15 +835,6 @@
                             <constraint firstItem="ETd-Cr-9WB" firstAttribute="leading" secondItem="DgI-wn-GTZ" secondAttribute="leading" id="vxg-Y7-ra1"/>
                             <constraint firstItem="2nI-5S-pnI" firstAttribute="leading" secondItem="3Qv-wt-Iah" secondAttribute="leading" id="xPZ-gI-yyT"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="I0a-jT-NVI"/>
-                                <exclude reference="GhO-gl-tbe"/>
-                                <exclude reference="KKW-BE-Qvb"/>
-                                <exclude reference="Pe7-P0-djQ"/>
-                                <exclude reference="HoG-PB-AAD"/>
-                            </mask>
-                        </variation>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="tLp-CS-Qih" appends="YES" id="MaO-Rz-rio"/>
                         </connections>
@@ -999,10 +920,6 @@
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="HPb-IR-y34">
                                         <rect key="frame" x="0.0" y="126" width="346" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="120" id="CGM-eq-0Sl"/>
-                                            <constraint firstAttribute="width" secondItem="HPb-IR-y34" secondAttribute="height" multiplier="3:1" id="ahm-w3-el7"/>
-                                        </constraints>
                                         <attributedString key="attributedText">
                                             <fragment content="  W: H:">
                                                 <attributes>
@@ -1013,12 +930,6 @@
                                             </fragment>
                                         </attributedString>
                                         <nil key="highlightedColor"/>
-                                        <variation key="default">
-                                            <mask key="constraints">
-                                                <exclude reference="CGM-eq-0Sl"/>
-                                                <exclude reference="ahm-w3-el7"/>
-                                            </mask>
-                                        </variation>
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1066,10 +977,6 @@
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="zEl-U7-rtu">
                                         <rect key="frame" x="0.0" y="126" width="346" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="120" id="84I-La-LfO"/>
-                                            <constraint firstAttribute="width" secondItem="zEl-U7-rtu" secondAttribute="height" multiplier="3:1" id="Y9d-e1-TW1"/>
-                                        </constraints>
                                         <attributedString key="attributedText">
                                             <fragment content="  W: H:">
                                                 <attributes>
@@ -1080,12 +987,6 @@
                                             </fragment>
                                         </attributedString>
                                         <nil key="highlightedColor"/>
-                                        <variation key="default">
-                                            <mask key="constraints">
-                                                <exclude reference="84I-La-LfO"/>
-                                                <exclude reference="Y9d-e1-TW1"/>
-                                            </mask>
-                                        </variation>
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1128,10 +1029,6 @@
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Bai-qH-yts">
                                         <rect key="frame" x="0.0" y="126" width="346" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="Bai-qH-yts" secondAttribute="height" multiplier="3:1" id="XJ7-S8-a9M"/>
-                                            <constraint firstAttribute="width" constant="120" id="sfb-zc-fLo"/>
-                                        </constraints>
                                         <attributedString key="attributedText">
                                             <fragment content="  W: H:">
                                                 <attributes>
@@ -1142,12 +1039,6 @@
                                             </fragment>
                                         </attributedString>
                                         <nil key="highlightedColor"/>
-                                        <variation key="default">
-                                            <mask key="constraints">
-                                                <exclude reference="XJ7-S8-a9M"/>
-                                                <exclude reference="sfb-zc-fLo"/>
-                                            </mask>
-                                        </variation>
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1338,10 +1229,6 @@
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="dtD-KC-gfc">
                                 <rect key="frame" x="0.0" y="518" width="248" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="120" id="EtF-bU-WYW"/>
-                                    <constraint firstAttribute="width" secondItem="dtD-KC-gfc" secondAttribute="height" multiplier="3:1" id="jDH-Ka-k2g"/>
-                                </constraints>
                                 <attributedString key="attributedText">
                                     <fragment content="  W: H:">
                                         <attributes>
@@ -1352,22 +1239,12 @@
                                     </fragment>
                                 </attributedString>
                                 <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="EtF-bU-WYW"/>
-                                        <exclude reference="jDH-Ka-k2g"/>
-                                    </mask>
-                                </variation>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YpC-ty-uab">
                                 <rect key="frame" x="304" y="368" width="296" height="180"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="FSh-hr-f0X">
                                 <rect key="frame" x="304" y="518" width="248" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="120" id="5Fg-6a-baK"/>
-                                    <constraint firstAttribute="width" secondItem="FSh-hr-f0X" secondAttribute="height" multiplier="3:1" id="FsK-pk-W5p"/>
-                                </constraints>
                                 <attributedString key="attributedText">
                                     <fragment content="  W: H:">
                                         <attributes>
@@ -1378,12 +1255,6 @@
                                     </fragment>
                                 </attributedString>
                                 <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="5Fg-6a-baK"/>
-                                        <exclude reference="FsK-pk-W5p"/>
-                                    </mask>
-                                </variation>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aUF-TO-AFZ">
                                 <rect key="frame" x="0.0" y="64" width="600" height="296"/>
@@ -1441,10 +1312,6 @@
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="b3D-8R-jdQ">
                                 <rect key="frame" x="0.0" y="320" width="552" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="120" id="V3Q-dG-WQO"/>
-                                    <constraint firstAttribute="width" secondItem="b3D-8R-jdQ" secondAttribute="height" multiplier="3:1" id="tDU-G6-Ams"/>
-                                </constraints>
                                 <attributedString key="attributedText">
                                     <fragment content="  W: H:">
                                         <attributes>
@@ -1455,12 +1322,6 @@
                                     </fragment>
                                 </attributedString>
                                 <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="V3Q-dG-WQO"/>
-                                        <exclude reference="tDU-G6-Ams"/>
-                                    </mask>
-                                </variation>
                             </label>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4V3-TT-i44">
                                 <rect key="frame" x="0.0" y="556" width="600" height="44"/>

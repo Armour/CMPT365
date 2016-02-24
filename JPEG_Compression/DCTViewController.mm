@@ -84,7 +84,7 @@
 - (void)runInverseDCT;
 - (void)runQuantization;
 - (void)runInverseQuantization;
-- (cv::Mat)getFinalImage;
+- (cv::Mat)getFinalImageWithNumber:(NSUInteger)number;
 - (CGRect)calculateTheRectOfImageInUIImageView:(UIImageView *)imageView;
 
 @end
@@ -130,6 +130,8 @@
     self.quantizationMatrixPickerView.delegate = self;
     self.quantizationMatrixPickerView.dataSource = self;
     self.quantizationMatrixPickerView.backgroundColor = [UIColor whiteColor];
+    self.quantizationMatrixPickerView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    self.quantizationMatrixPickerView.layer.borderWidth = 1;
 
     self.quantizationMatrixPickerData = [[NSArray alloc] initWithObjects:@DEFAULT_PICKERVIEW_OPTION, @"non-uniform quantization", @"low non-uniform quantization", @"high non-uniform quantization", @"constant quantization", @"low constant quantization", @"high constant quantization", nil];
 
@@ -195,7 +197,7 @@
                                     (int)[self.channelCrImageView image].size.height]];
 }
 
-- (void)initDCTMatrix {
+- (void)initDCTMatrix {             // Prepare the DCT matrix
     DCT8x8Matrix = cv::Mat(8, 8, CV_32F);
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
@@ -208,7 +210,7 @@
     }
 }
 
-- (void)initQuantizationMatrix {
+- (void)initQuantizationMatrix {            // Prepare the six quantization matrix
     float nonUniformData[8][8] = {{16, 11, 10, 16, 24, 40, 51, 61},
                                  {12, 12, 14, 19, 26, 58, 60, 55},
                                  {14, 13, 16, 24, 40, 57, 69, 56},
@@ -305,7 +307,7 @@
 
 #pragma mark - Matrix Formation
 
-- (cv::Mat)clipWithSource:(cv::Mat)image {
+- (cv::Mat)clipWithSource:(cv::Mat)image {          // Clip the image into multiply of 8 * 8
     cv::Size size = image.size();
     int newWidth = size.width / 8 * 8;
     int newHeight = size.height / 8 * 8;
@@ -319,7 +321,7 @@
     return image;
 }
 
-- (void)clipTo8nx8nMatrix {
+- (void)clipTo8nx8nMatrix {             // Clip three channels
     self.YImage = [self clipWithSource:self.YImage];
     self.CbImage = [self clipWithSource:self.CbImage];
     self.CrImage = [self clipWithSource:self.CrImage];
@@ -327,7 +329,7 @@
 
 #pragma mark - DCT
 
-- (cv::Mat)DCT8x8WithSource:(const cv::Mat &)src {
+- (cv::Mat)DCT8x8WithSource:(const cv::Mat &)src {      // Do the DCT transformation
     int width = src.size().width / 8;
     int height = src.size().height / 8;
 
@@ -351,7 +353,7 @@
     return dest;
 }
 
-- (void)runDCT {
+- (void)runDCT {            // Do the DCT transformation for three channels
     YDCTMatrix = [self DCT8x8WithSource:self.YImage];
     CbDCTMatrix = [self DCT8x8WithSource:self.CbImage];
     CrDCTMatrix = [self DCT8x8WithSource:self.CrImage];
@@ -359,7 +361,7 @@
 
 #pragma mark - Inverse DCT
 
-- (cv::Mat)InverseDCT8x8WithSource:(const cv::Mat &)src {
+- (cv::Mat)InverseDCT8x8WithSource:(const cv::Mat &)src {       // Do the IDCT transformation
     int width = src.size().width / 8;
     int height = src.size().height / 8;
 
@@ -383,7 +385,7 @@
     return dest;
 }
 
-- (void)runInverseDCT {
+- (void)runInverseDCT {         // Do the IDCT transformation for three channels
     for (int i = 0; i < 6; i++) {
         YInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:YInversedQuantizedMatrix[i]].clone());
         CbInversedDCTMatrix.push_back([self InverseDCT8x8WithSource:CbInversedQuantizedMatrix[i]].clone());
@@ -393,7 +395,7 @@
 
 #pragma mark - Quantization
 
-- (cv::Mat)QuantizationWithSource:(const cv::Mat&)src QuantizationMatrix:(const cv::Mat&)quantMat {
+- (cv::Mat)QuantizationWithSource:(const cv::Mat&)src QuantizationMatrix:(const cv::Mat&)quantMat {     // Do the quantization
     int width = src.size().width;
     int height = src.size().height;
 
@@ -412,7 +414,7 @@
     return dest;
 }
 
-- (void)runQuantization {
+- (void)runQuantization {       // Do the quantization for three channels
     for (int i = 0; i < 6; i++) {
         YQuantizedMatrix.push_back([self QuantizationWithSource:YDCTMatrix QuantizationMatrix:quantizationMatrix[i]].clone());
         CbQuantizedMatrix.push_back([self QuantizationWithSource:CbDCTMatrix QuantizationMatrix:quantizationMatrix[i]].clone());
@@ -422,7 +424,7 @@
 
 #pragma mark - Inverse Quantization
 
-- (cv::Mat)InverseQuantizationWithSource:(const cv::Mat&)src QuantizationMatrix:(const cv::Mat&)matrix {
+- (cv::Mat)InverseQuantizationWithSource:(const cv::Mat&)src QuantizationMatrix:(const cv::Mat&)matrix {    // Inverse quantization
     int width = src.size().width;
     int height = src.size().height;
 
@@ -437,7 +439,7 @@
     return dest;
 }
 
-- (void)runInverseQuantization {
+- (void)runInverseQuantization {        // Do the inverse quantization for three channels
     for (int i = 0; i < 6; i++) {
         YInversedQuantizedMatrix.push_back([self InverseQuantizationWithSource:YQuantizedMatrix[i]
                                                             QuantizationMatrix:quantizationMatrix[i]].clone());
@@ -450,15 +452,15 @@
 
 #pragma mark - Generate Final Image
 
-- (cv::Mat)getFinalImage {
+- (cv::Mat)getFinalImageWithNumber:(NSUInteger)number {          // Get the final RGB image from YCbCR
     std::vector<cv::Mat> RGBChannels;
-    cv::Size size = YInversedDCTMatrix[self.quantizationMatrixChoosedNumber].size();
+    cv::Size size = YInversedDCTMatrix[number].size();
     int imageWidth = size.width;
     int imageHeight = size.height;
-    int scaleCbHeight = imageHeight / CbInversedDCTMatrix[self.quantizationMatrixChoosedNumber].size().height;
-    int scaleCrHeight = imageHeight / CrInversedDCTMatrix[self.quantizationMatrixChoosedNumber].size().height;
-    int scaleCbWidth = imageWidth / CbInversedDCTMatrix[self.quantizationMatrixChoosedNumber].size().width;
-    int scaleCrWidth = imageWidth / CrInversedDCTMatrix[self.quantizationMatrixChoosedNumber].size().width;
+    int scaleCbHeight = imageHeight / CbInversedDCTMatrix[number].size().height;
+    int scaleCrHeight = imageHeight / CrInversedDCTMatrix[number].size().height;
+    int scaleCbWidth = imageWidth / CbInversedDCTMatrix[number].size().width;
+    int scaleCrWidth = imageWidth / CrInversedDCTMatrix[number].size().width;
     cv::Mat tmpMat = cv::Mat(imageHeight, imageWidth, CV_8U);
     RGBChannels.push_back(tmpMat.clone());
     RGBChannels.push_back(tmpMat.clone());
@@ -466,9 +468,9 @@
 
     for (int i = 0; i < imageHeight; i++) {
         for (int j = 0; j < imageWidth; j++) {
-            float Y = YInversedDCTMatrix[self.quantizationMatrixChoosedNumber].at<float>(i, j);
-            float Cb = CbInversedDCTMatrix[self.quantizationMatrixChoosedNumber].at<float>(i / scaleCbHeight, j / scaleCbWidth);
-            float Cr = CrInversedDCTMatrix[self.quantizationMatrixChoosedNumber].at<float>(i / scaleCrHeight, j / scaleCrWidth);
+            float Y = YInversedDCTMatrix[number].at<float>(i, j);
+            float Cb = CbInversedDCTMatrix[number].at<float>(i / scaleCbHeight, j / scaleCbWidth);
+            float Cr = CrInversedDCTMatrix[number].at<float>(i / scaleCrHeight, j / scaleCrWidth);
             float R = GET_R_FROM_YCbCr;
             float G = GET_G_FROM_YCbCr;
             float B = GET_B_FROM_YCbCr;
@@ -503,7 +505,7 @@
 
 #pragma mark - Button Click Event
 
-- (IBAction)chooseSubsampling:(UIBarButtonItem *)sender {
+- (IBAction)chooseSubsampling:(UIBarButtonItem *)sender {       // Choose subsampling picker view animation
     if (!self.isChoosingQuantizationMatrix) {
         self.isChoosingQuantizationMatrix = true;
         self.quantizationMatrixPickerTopConstraint.constant -= [self.quantizationMatrixPickerView frame].size.height;
@@ -560,7 +562,7 @@
     }
 }
 
-- (void)YImageTapped:(UITapGestureRecognizer *)sender {
+- (void)YImageTapped:(UITapGestureRecognizer *)sender {         // Tapped on Y channel image callback function
     [self TapGestureEvent:sender];
     CGPoint screenPoint = [sender locationInView:self.view];
     CGPoint touchPoint = [sender locationInView:self.channelYImageView];
@@ -586,7 +588,7 @@
     }
 }
 
-- (void)CbImageTapped:(UITapGestureRecognizer *)sender {
+- (void)CbImageTapped:(UITapGestureRecognizer *)sender {        // Tapped on Cb channel image callback function
     [self TapGestureEvent:sender];
     CGPoint screenPoint = [sender locationInView:self.view];
     CGPoint touchPoint = [sender locationInView:self.channelCbImageView];
@@ -612,7 +614,7 @@
     }
 }
 
-- (void)CrImageTapped:(UITapGestureRecognizer *)sender {
+- (void)CrImageTapped:(UITapGestureRecognizer *)sender {        // Tapped on Cr channel image callback function
     [self TapGestureEvent:sender];
     CGPoint screenPoint = [sender locationInView:self.view];
     CGPoint touchPoint = [sender locationInView:self.channelCrImageView];
@@ -641,7 +643,7 @@
 #pragma mark - Prepare Segue
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"segueToDCTResult"]) {
+    if ([[segue identifier] isEqualToString:@"segueToDCTResult"]) {         // Segue to DCT result page
         DisplayViewController *destViewController = [segue destinationViewController];
         [destViewController setQuantizationMatrixChoosedNumber:self.quantizationMatrixChoosedNumber];
         cv::Mat Y, Cb, Cr;
@@ -653,7 +655,7 @@
             destViewController->CbImage.push_back(Cb.clone());
             destViewController->CrImage.push_back(Cr.clone());
         }
-    } else if ([[segue identifier] isEqualToString:@"segueToQuantizedResult"]) {
+    } else if ([[segue identifier] isEqualToString:@"segueToQuantizedResult"]) {        // Segue to quantization result page
         DisplayViewController *destViewController = [segue destinationViewController];
         [destViewController setQuantizationMatrixChoosedNumber:self.quantizationMatrixChoosedNumber];
         for (int i = 0; i < 6; i++) {
@@ -665,7 +667,7 @@
             destViewController->CbImage.push_back(Cb.clone());
             destViewController->CrImage.push_back(Cr.clone());
         }
-    } else if ([[segue identifier] isEqualToString:@"segueToIDCTResult"]) {
+    } else if ([[segue identifier] isEqualToString:@"segueToIDCTResult"]) {         // Segue to inverse DCT result page
         DisplayViewController *destViewController = [segue destinationViewController];
         [destViewController setQuantizationMatrixChoosedNumber:self.quantizationMatrixChoosedNumber];
         for (int i = 0; i < 6; i++) {
@@ -677,10 +679,13 @@
             destViewController->CbImage.push_back(Cb.clone());
             destViewController->CrImage.push_back(Cr.clone());
         }
-    } else if ([[segue identifier] isEqualToString:@"segueToFinalResult"]) {
+    } else if ([[segue identifier] isEqualToString:@"segueToFinalResult"]) {        // Segue to final compression result page
         FinalResultViewController *destViewController = [segue destinationViewController];
         [destViewController setOriginalImage:self.originalImage];
-        [destViewController setFinalImage:[self getFinalImage]];
+        [destViewController setQuantizationMatrixChoosedNumber:self.quantizationMatrixChoosedNumber];
+        for (int i = 0; i < 6; i++) {
+            destViewController->finalImage.push_back([self getFinalImageWithNumber:i].clone());
+        }
     }
 }
 
@@ -739,7 +744,7 @@
     [numberLabel setText:@"?"];
     [numberLabel setFont:[UIFont systemFontOfSize:7]];
     [numberLabel setAdjustsFontSizeToFitWidth:true];
-    if (self.isTouchedImageView) {
+    if (self.isTouchedImageView) {                          // Update the block matrix data
         if (collectionView.tag == 1) {
             [numberLabel setText:[[NSString alloc] initWithFormat:@"%d",
                                   (int)DCTBlock.at<float>((int)indexPath.item / 8, (int)indexPath.item % 8)]];
